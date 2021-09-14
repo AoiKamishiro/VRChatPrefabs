@@ -1,0 +1,202 @@
+fileFormatVersion: 2
+guid: fc513cdb56d781944802350fd8163080
+ModelImporter:
+  serializedVersion: 23
+  fileIDToRecycleName:
+    100000: 01_bed_pillow
+    100002: 02_light
+    100004: 03_light
+    100006: 04_chair1
+    100008: 05_chair2
+    100010: 06_ConcentCover
+    100012: 07_Cushion
+    100014: 08_Desk
+    100016: 09_Room_light
+    100018: 10_BookShelf
+    100020: 11_Sofa
+    100022: 12_Sofa_Single
+    100024: 13_Stool
+    100026: 14_Table
+    100028: 15_Table_Small
+    100030: //RootNode
+    400000: 01_bed_pillow
+    400002: 02_light
+    400004: 03_light
+    400006: 04_chair1
+    400008: 05_chair2
+    400010: 06_ConcentCover
+    400012: 07_Cushion
+    400014: 08_Desk
+    400016: 09_Room_light
+    400018: 10_BookShelf
+    400020: 11_Sofa
+    400022: 12_Sofa_Single
+    400024: 13_Stool
+    400026: 14_Table
+    400028: 15_Table_Small
+    400030: //RootNode
+    2100000: cloth.001
+    2100002: base.002
+    2100004: wood.001
+    2100006: bed_pillow
+    2100008: bed_comforter
+    2100010: bed_cover
+    2100012: bed_cushion
+    2100014: bed_base
+    2100016: base
+    2100018: hood
+    2100020: light
+    2100022: base.001
+    2100024: hood.001
+    2100026: light.001
+    2100028: chair_base
+    2100030: cloth
+    2100032: chair_base.001
+    2100034: cushion
+    2100036: consent-base
+    2100038: consent-plug
+    2100040: pillow
+    2100042: desk_leg2
+    2100044: desk_wire
+    2100046: desk_leg
+    2100048: desk_top
+    2100050: pole
+    2100052: light.002
+    2100054: vesel
+    2100056: wood
+    2100058: stool_cushion
+    2100060: stool_keg
+    2100062: table
+    2100064: leg
+    2100066: table.001
+    2300000: 01_bed_pillow
+    2300002: 02_light
+    2300004: 03_light
+    2300006: 04_chair1
+    2300008: 05_chair2
+    2300010: 06_ConcentCover
+    2300012: 07_Cushion
+    2300014: 08_Desk
+    2300016: 09_Room_light
+    2300018: 10_BookShelf
+    2300020: 11_Sofa
+    2300022: 12_Sofa_Single
+    2300024: 13_Stool
+    2300026: 14_Table
+    2300028: 15_Table_Small
+    3300000: 01_bed_pillow
+    3300002: 02_light
+    3300004: 03_light
+    3300006: 04_chair1
+    3300008: 05_chair2
+    3300010: 06_ConcentCover
+    3300012: 07_Cushion
+    3300014: 08_Desk
+    3300016: 09_Room_light
+    3300018: 10_BookShelf
+    3300020: 11_Sofa
+    3300022: 12_Sofa_Single
+    3300024: 13_Stool
+    3300026: 14_Table
+    3300028: 15_Table_Small
+    4300000: 12_Sofa_Single
+    4300002: 01_bed_pillow
+    4300004: 02_light
+    4300006: 03_light
+    4300008: 04_chair1
+    4300010: 05_chair2
+    4300012: 06_ConcentCover
+    4300014: 07_Cushion
+    4300016: 08_Desk
+    4300018: 09_Room_light
+    4300020: 10_BookShelf
+    4300022: 11_Sofa
+    4300024: 13_Stool
+    4300026: 14_Table
+    4300028: 15_Table_Small
+  externalObjects: {}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    previousCalculatedGlobalScale: 1
+    hasPreviousCalculatedGlobalScale: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

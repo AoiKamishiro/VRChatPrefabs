@@ -1,0 +1,19 @@
+{
+    "name": "Kamishiro.VRChatUDON.AAChair",
+    "references": [
+        "UdonSharp.Editor",
+        "UdonSharp.Runtime",
+        "VRC.Udon",
+        "VRC.Udon.Editor",
+        "VRC.Udon.Editor.UPMImporter",
+        "VRC.Udon.Serialization.OdinSerializer"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": []
+}

@@ -1,0 +1,10 @@
+CC0_Materials
+
+License:CC0
+
+All texture from CC0 textures(without Glass_Color.png).
+https://cc0textures.com/
+
+Glass_Color.png is made by coquelicotz,but this textures is CC0 too.
+
+have a fun!

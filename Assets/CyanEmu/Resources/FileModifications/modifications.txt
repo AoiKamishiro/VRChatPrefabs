@@ -1,0 +1,51 @@
+4
+VRC_TriggerEditor.cs
+1
+AddAfter 3 4
+                        EditorGUILayout.Separator();
+                    }
+                }
+                if (Application.isPlaying && GUILayout.Button("Execute"))
+                {
+                    VRCPrefabs.CyanEmu.CyanEmuTriggerExecutor.ExecuteTrigger((target as VRC_Trigger).Triggers[idx]);
+                }
+VRCSdkControlPanel.cs
+5
+AddAfter 1 1
+    public static VRCSdkControlPanel window;
+    private Vector2 scrollPosition_;
+Delete 2
+        window.minSize = new Vector2(SdkWindowWidth + 4, 600);
+        window.maxSize = new Vector2(SdkWindowWidth + 4, 2000);
+AddAfter 2 1
+            InitializeStyles();
+        }
+        scrollPosition_ = GUILayout.BeginScrollView(scrollPosition_);
+AddAfter 3 1
+            GUILayout.EndVertical();
+            GUILayout.FlexibleSpace();
+            GUILayout.EndHorizontal();
+            GUILayout.EndScrollView();
+AddAfter 3 1
+                ShowAccount();
+                break;
+        }
+        GUILayout.EndScrollView();
+VRC_SpatialAudioSourceEditor3.cs
+3
+AddAfter 1 1
+    [CustomEditor(typeof(VRC.SDK3.Components.VRCSpatialAudioSource))]
+    [CanEditMultipleObjects]
+Delete 1
+            showAdvancedOptions = EditorGUILayout.Foldout(showAdvancedOptions, "Advanced Options");
+Delete 1
+            if (showAdvancedOptions)
+VRC_SpatialAudioSourceEditor.cs
+3
+AddAfter 1 1
+    [CustomEditor(typeof(VRCSDK2.VRC_SpatialAudioSource))]
+    [CanEditMultipleObjects]
+Delete 1
+            showAdvancedOptions = EditorGUILayout.Foldout(showAdvancedOptions, "Advanced Options");
+Delete 1
+            if (showAdvancedOptions)
