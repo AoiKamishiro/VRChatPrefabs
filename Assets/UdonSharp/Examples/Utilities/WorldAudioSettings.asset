@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c333ccfdd0cbdbc4ca30cef2dd6e6b9b, type: 3}
   m_Name: WorldAudioSettings
   m_EditorClassIdentifier: 
-  serializedUdonProgramAsset: {fileID: 11400000, guid: 03760ffedae2f9140ab4d5419342e8f8,
+  serializedUdonProgramAsset: {fileID: 11400000, guid: 15ea5fa3bdf43c840ad1b4c87c7a09ed,
     type: 2}
   udonAssembly: 
   assemblyError: 
   sourceCsScript: {fileID: 11500000, guid: fdc09c11006c3474f91cfe7e809c9b96, type: 3}
-  behaviourSyncMode: 1
+  behaviourSyncMode: 2
   behaviourIDHeapVarName: __refl_const_intnl_udonTypeID
   compileErrors: []
   hasInteractEvent: 0

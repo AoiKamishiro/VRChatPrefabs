@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c333ccfdd0cbdbc4ca30cef2dd6e6b9b, type: 3}
   m_Name: MasterToggleObject
   m_EditorClassIdentifier: 
-  serializedUdonProgramAsset: {fileID: 11400000, guid: a9a4d80c76f6f2d459fda89515792c92,
+  serializedUdonProgramAsset: {fileID: 11400000, guid: 4c4d252c9d174604b9cfada6807f801d,
     type: 2}
   udonAssembly: 
   assemblyError: 
   sourceCsScript: {fileID: 11500000, guid: fe5e5216dff1add40961bf62f441e92d, type: 3}
-  behaviourSyncMode: 3
+  behaviourSyncMode: 4
   behaviourIDHeapVarName: __refl_const_intnl_udonTypeID
   compileErrors: []
   hasInteractEvent: 1
