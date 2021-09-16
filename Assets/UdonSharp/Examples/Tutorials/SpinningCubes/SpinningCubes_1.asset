@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c333ccfdd0cbdbc4ca30cef2dd6e6b9b, type: 3}
   m_Name: SpinningCubes_1
   m_EditorClassIdentifier: 
-  serializedUdonProgramAsset: {fileID: 11400000, guid: 8fe073eff9bb7294fba1d0498f5e7d3a,
+  serializedUdonProgramAsset: {fileID: 11400000, guid: b506166372ab22941815a9d4d493dc58,
     type: 2}
   udonAssembly: 
   assemblyError: 

@@ -87,13 +87,13 @@ MonoBehaviour:
   - Name: UdonToolkit
     Author: orels1
     Description: Purpose-built Udon Behaviours and tools to make your own
-    Imported: 0
-    Downloaded: 0
-    ImportedVersion: 0.0.0
-    DownloadedVersion: 0.0.0
+    Imported: 1
+    Downloaded: 1
+    ImportedVersion: 1.1.2
+    DownloadedVersion: 1.1.2
     CurrentVersion: 0.0.0
     UpdateAvailable: 0
-    LatestCached: 0
+    LatestCached: 1
     VersionFileMissing: 0
     LastRefreshed: 0
     RequiresUdonSharp: 1
