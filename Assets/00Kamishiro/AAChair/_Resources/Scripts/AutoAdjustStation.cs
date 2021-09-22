@@ -11,110 +11,95 @@ using UdonSharpEditor;
 
 namespace Kamishiro.VRChatUDON.AAChair
 {
+    [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     public class AutoAdjustStation : UdonSharpBehaviour
     {
-        [UdonSynced] private Vector3 position = Vector3.zero;
-        private Quaternion rotation = Quaternion.identity;
+        [UdonSynced(UdonSyncMode.None)] private int playerId = -1;
         private VRCPlayerApi _lp;
-        public Animator animator;
-        public BoxCollider boxCollider;
-        private bool _usingStation = false;
         private const float _zError = 0.05f;//ふくらはぎ！！
         private const float _yError = 0.05f;//ふともも！！
         private const float _maxValue = 2.0f;
+        public Animator anim;
+        public Adjuster adjuster;
+        public Station station;
         public Transform adjustPint;
         public Transform enterPoint;
         private float avatarHeight = 0.0f;
         private bool _adjustPosition = false;
-        private const string animatorParam = "adjustPosition";
+        private const string animatorParam = "adjust";
+        private bool isSyncStandby = true;
 
         private void Start()
         {
             _lp = Networking.LocalPlayer;
         }
-
-        private void LateUpdate()
+        public void OnInteract()
         {
-            if (_adjustPosition)
-                SendCustomEvent(nameof(AdjustPosition));
+            station._AAChair_UseAttachedStation(_lp);
         }
-        public override void Interact()
-        {
-            _lp.UseAttachedStation();
-        }
-        public override void OnStationEntered(VRCPlayerApi player)
+        public void _AAChair_OnStationEntered(VRCPlayerApi player)
         {
             if (_lp != player)
                 return;
 
-            _usingStation = true;
+            anim.SetTrigger(animatorParam);
             Networking.SetOwner(_lp, gameObject);
-            SendCustomNetworkEvent(NetworkEventTarget.All, nameof(DisableCollider));
-            SendCustomEvent(nameof(SetAnimatorTrue));
+            playerId = player.playerId;
+            SendCustomEvent(nameof(RequestSyncVariable));
         }
-        public override void OnStationExited(VRCPlayerApi player)
+        public void _AAChair_OnStationExited(VRCPlayerApi player)
         {
-            _usingStation = false;
-            SendCustomNetworkEvent(NetworkEventTarget.All, nameof(EnableCollider));
-            SendCustomEvent(nameof(SetAnimatorFalse));
+            if (_lp != player)
+                return;
+
+            playerId = -1;
+            SendCustomEvent(nameof(RequestSyncVariable));
         }
-        public void Sync()
+        public void RequestSyncVariable()
         {
-            RequestSerialization();
+            if (!isSyncStandby) return;
+
+            SendCustomEvent(nameof(_AAChair_DoSyncVariable));
         }
-        public void SetAnimatorTrue()
+        public void _AAChair_DoSyncVariable()
         {
-            animator.SetBool(animatorParam, true);
-        }
-        public void SetAnimatorFalse()
-        {
-            animator.SetBool(animatorParam, false);
-        }
-        public void StartAdjustPosition()
-        {
-            _adjustPosition = true;
-        }
-        public void FinishAdjustPosition()
-        {
-            _adjustPosition = false;
+            bool isClogged = Networking.IsClogged;
+
+            if (!isClogged) RequestSerialization();
+            else SendCustomEventDelayedSeconds(nameof(_AAChair_DoSyncVariable), 1.0f);
+
+            isSyncStandby = !isClogged;
         }
         public override void OnDeserialization()
         {
-            SendCustomEvent(nameof(SetPosition));
+            if (playerId == -1) return;
+
+            SendCustomEventDelayedSeconds(nameof(_AAChair_AdjustPosition), 5.0f);
         }
         public override void OnPlayerJoined(VRCPlayerApi player)
         {
-            SendCustomNetworkEvent(NetworkEventTarget.All, nameof(StationInUseCheck));
-        }
-        public void StationInUseCheck()
-        {
-            if (!_usingStation)
-                return;
-
-            SendCustomNetworkEvent(NetworkEventTarget.All, nameof(DisableCollider));
-            RequestSerialization();
+            if (_lp == player) SendCustomNetworkEvent(NetworkEventTarget.Owner, nameof(RequestSyncVariable));
         }
 
-        public void AdjustPosition()
-        {
-            if (!_usingStation)
-                return;
 
-            position = GetAdjustedPosition();
-            SendCustomEvent(nameof(SetPosition));
-        }
-        public Vector3 GetAdjustedPosition()
+        public void _AAChair_AdjustPosition()
         {
+            enterPoint.localPosition = GetAdjustedPosition(VRCPlayerApi.GetPlayerById(playerId));
+            enterPoint.localRotation = Quaternion.identity;
+        }
+        private Vector3 GetAdjustedPosition(VRCPlayerApi player)
+        {
+            if (player == null) return Vector3.zero;
             Vector3 scale = transform.lossyScale;
             float maxy = _maxValue / scale.y;
             float maxz = _maxValue / scale.z;
-            avatarHeight = GetAvatarHeight();
-            Vector3 lflp = transform.InverseTransformPoint(_lp.GetBonePosition(HumanBodyBones.LeftFoot));
-            Vector3 rflp = transform.InverseTransformPoint(_lp.GetBonePosition(HumanBodyBones.RightFoot));
-            Vector3 llllp = transform.InverseTransformPoint(_lp.GetBonePosition(HumanBodyBones.LeftLowerLeg));
-            Vector3 rlllp = transform.InverseTransformPoint(_lp.GetBonePosition(HumanBodyBones.RightLowerLeg));
-            Vector3 lullp = transform.InverseTransformPoint(_lp.GetBonePosition(HumanBodyBones.LeftUpperLeg));
-            Vector3 rullp = transform.InverseTransformPoint(_lp.GetBonePosition(HumanBodyBones.RightUpperLeg));
+            avatarHeight = GetAvatarHeight(player);
+            Vector3 lflp = transform.InverseTransformPoint(player.GetBonePosition(HumanBodyBones.LeftFoot));
+            Vector3 rflp = transform.InverseTransformPoint(player.GetBonePosition(HumanBodyBones.RightFoot));
+            Vector3 llllp = transform.InverseTransformPoint(player.GetBonePosition(HumanBodyBones.LeftLowerLeg));
+            Vector3 rlllp = transform.InverseTransformPoint(player.GetBonePosition(HumanBodyBones.RightLowerLeg));
+            Vector3 lullp = transform.InverseTransformPoint(player.GetBonePosition(HumanBodyBones.LeftUpperLeg));
+            Vector3 rullp = transform.InverseTransformPoint(player.GetBonePosition(HumanBodyBones.RightUpperLeg));
             float ydis = enterPoint.localPosition.y + adjustPint.localPosition.y;
             float zdis = enterPoint.localPosition.z + adjustPint.localPosition.z;
 
@@ -126,29 +111,16 @@ namespace Kamishiro.VRChatUDON.AAChair
 
             return new Vector3(0, Mathf.Clamp(lposy, -1 * maxy, maxy), Mathf.Clamp(lposz, -1 * maxz, maxz));
         }
-        public void SetPosition()
+        private float GetAvatarHeight(VRCPlayerApi player)
         {
-            enterPoint.localPosition = position;
-            enterPoint.localRotation = rotation;
-        }
-        public void EnableCollider()
-        {
-            boxCollider.enabled = true;
-        }
-        public void DisableCollider()
-        {
-            boxCollider.enabled = false;
-        }
-        public float GetAvatarHeight()
-        {
-            Vector3 pLFoot = _lp.GetBonePosition(HumanBodyBones.LeftFoot);
-            Vector3 pRFoot = _lp.GetBonePosition(HumanBodyBones.RightFoot);
-            Vector3 pLLowLeg = _lp.GetBonePosition(HumanBodyBones.LeftLowerLeg);
-            Vector3 pRLowLeg = _lp.GetBonePosition(HumanBodyBones.RightLowerLeg);
-            Vector3 pLUpLeg = _lp.GetBonePosition(HumanBodyBones.LeftUpperLeg);
-            Vector3 pRUpLeg = _lp.GetBonePosition(HumanBodyBones.RightUpperLeg);
-            Vector3 pSpine = _lp.GetBonePosition(HumanBodyBones.Spine);
-            Vector3 pHead = _lp.GetBonePosition(HumanBodyBones.Head);
+            Vector3 pLFoot = player.GetBonePosition(HumanBodyBones.LeftFoot);
+            Vector3 pRFoot = player.GetBonePosition(HumanBodyBones.RightFoot);
+            Vector3 pLLowLeg = player.GetBonePosition(HumanBodyBones.LeftLowerLeg);
+            Vector3 pRLowLeg = player.GetBonePosition(HumanBodyBones.RightLowerLeg);
+            Vector3 pLUpLeg = player.GetBonePosition(HumanBodyBones.LeftUpperLeg);
+            Vector3 pRUpLeg = player.GetBonePosition(HumanBodyBones.RightUpperLeg);
+            Vector3 pSpine = player.GetBonePosition(HumanBodyBones.Spine);
+            Vector3 pHead = player.GetBonePosition(HumanBodyBones.Head);
 
             float lowerLegLen = Mathf.Max(Vector3.Distance(pLLowLeg, pLFoot), Vector3.Distance(pRLowLeg, pRFoot));
             float upperLegLen = Mathf.Max(Vector3.Distance(pLUpLeg, pLLowLeg), Vector3.Distance(pRUpLeg, pRLowLeg));
@@ -162,9 +134,10 @@ namespace Kamishiro.VRChatUDON.AAChair
     [CustomEditor(typeof(AutoAdjustStation))]
     public class AutoAdjustStationEditor : Editor
     {
+        private SerializedProperty _anim;
         private AutoAdjustStation _aaStation;
-        private SerializedProperty _animator;
-        private SerializedProperty _boxCollider;
+        private SerializedProperty _adjuster;
+        private SerializedProperty _station;
         private SerializedProperty _enterPoint;
         private SerializedProperty _referencePoint;
         private Texture headerTexture;
@@ -187,8 +160,9 @@ namespace Kamishiro.VRChatUDON.AAChair
 
         private void OnEnable()
         {
-            _animator = serializedObject.FindProperty(nameof(AutoAdjustStation.animator));
-            _boxCollider = serializedObject.FindProperty(nameof(AutoAdjustStation.boxCollider));
+            _anim = serializedObject.FindProperty(nameof(AutoAdjustStation.anim));
+            _adjuster = serializedObject.FindProperty(nameof(AutoAdjustStation.adjuster));
+            _station = serializedObject.FindProperty(nameof(AutoAdjustStation.station));
             _enterPoint = serializedObject.FindProperty(nameof(AutoAdjustStation.enterPoint));
             _referencePoint = serializedObject.FindProperty(nameof(AutoAdjustStation.adjustPint));
             headerTexture = AssetDatabase.LoadAssetAtPath(AssetDatabase.GUIDToAssetPath(guidHeader), typeof(Texture)) as Texture;
@@ -290,8 +264,9 @@ namespace Kamishiro.VRChatUDON.AAChair
             internal_fold = EditorGUILayout.Foldout(internal_fold, "Object Reference");
             if (internal_fold)
             {
-                EditorGUILayout.PropertyField(_animator, true);
-                EditorGUILayout.PropertyField(_boxCollider, true);
+                EditorGUILayout.PropertyField(_anim, true);
+                EditorGUILayout.PropertyField(_adjuster, true);
+                EditorGUILayout.PropertyField(_station, true);
                 EditorGUILayout.PropertyField(_enterPoint, true);
                 EditorGUILayout.PropertyField(_referencePoint, true);
             }

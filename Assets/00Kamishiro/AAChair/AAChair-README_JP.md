@@ -1,8 +1,8 @@
 # VRCSDK3 Udon用 自動調節椅子 AAChair
-![HeaderImage](ShopImage.png)
+![HeaderImage](_Resources/Images/ShopImage.png)
 
-version 1.0  
-<!-- [English Readme][00] -->
+version 1.0.2  
+[English Readme][00]  
 
 制作：神城アオイ([@aoi3192][01])  
 
@@ -32,7 +32,7 @@ version 1.0
 [Vket: 神城工業][92]  
 [Github: 神城アオイ][93]  
 
-<!-- [00]:README-en.md -->
+[00]:AAChair-README_EN.md
 [01]:https://twitter.com/aoi3192
 [21]:https://github.com/AoiKamishiro/VRC_UdonPrefabs/releases
 [61]:https://github.com/AoiKamishiro/VRC_UdonPrefabs/blob/master/LICENSE
