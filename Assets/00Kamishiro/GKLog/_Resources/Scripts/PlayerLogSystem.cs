@@ -8,6 +8,7 @@
 using System;
 using UdonSharp;
 using UnityEngine;
+using UnityEngine.UI;
 using VRC.SDKBase;
 using VRC.Udon.Common.Interfaces;
 
@@ -20,10 +21,13 @@ using System.Text.RegularExpressions;
 
 namespace Kamishiro.VRChatUDON.GKLog
 {
+    [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     public class PlayerLogSystem : UdonSharpBehaviour
     {
-        [UdonSynced] private string _logStrings = "\"0[Start] GKLog V2.1 by AoiKamishiro\"";//\"1 2100/12/31 11:59:59 AoiKamishiro\",//UTC
-        public ScrollView scrollView;
+        [UdonSynced(UdonSyncMode.None)] private string _logStrings = "\"0[Start] GKLog V2.2 by AoiKamishiro\"";//\"1 2100/12/31 11:59:59 AoiKamishiro\",//UTC
+        //[UdonSynced(UdonSyncMode.None)] private bool isSending = false;
+        //[UdonSynced(UdonSyncMode.None)] private int dataIndex = 0;
+        public ScrollRect scrollRect;
         public string timeFormat = "[MM/dd HH:mm]";
         public string joinFormat = "[<color=#00ff00>Join</color>]{time} {player}";
         public string leftFormat = "[<color=#ff0000>Left</color>]{time} {player}";
@@ -31,59 +35,45 @@ namespace Kamishiro.VRChatUDON.GKLog
         public LogObject[] _logObjects;
         public string[] joinFormats;
         public string[] leftFormats;
-        public string patternTime = "{time}";
-        public string patternPlayer = "{player}";
+        public readonly string patternTime = "{time}";
+        public readonly string patternPlayer = "{player}";
         public TimeSpan timeSpan;
+        private bool isSyncStandby = true;
 
         private void Start()
         {
+            Debug.Log(_logObjects.Length);
             _lp = Networking.LocalPlayer;
             timeSpan = DateTime.Now - DateTime.UtcNow;
-            foreach (LogObject item in _logObjects)
-            {
-                item._timeSpam = timeSpan;
-                item._timeFormat = timeFormat;
-                item._joinFormat = joinFormats;
-                item._leftFormat = leftFormats;
-                item._patternPlayer = patternPlayer;
-                item._patternTime = patternTime;
-            }
-            if (!Networking.IsOwner(_lp, gameObject))
-                SendCustomNetworkEvent(NetworkEventTarget.Owner, nameof(ForceSync));
         }
         public override void OnPlayerJoined(VRCPlayerApi player)
         {
-            if (!Networking.IsOwner(_lp, gameObject))
-                return;
+            if (_lp == player) SendCustomNetworkEvent(NetworkEventTarget.Owner, nameof(RequestSyncVariable));
+
+            if (!Networking.IsOwner(_lp, gameObject)) return;
 
             string currentLog = GetJoinLog(player.displayName);
             string[] logs = Add(PerseLog(_logStrings), currentLog);
             logs = Clamp(logs, _logObjects.Length);
             DispLog(logs);
             _logStrings = CreateLogStrings(logs);
-            //RequestSerialization();
         }
         public override void OnPlayerLeft(VRCPlayerApi player)
         {
-            if (!Networking.IsOwner(_lp, gameObject))
-                return;
+            if (!Networking.IsOwner(_lp, gameObject)) return;
 
             string currentLog = GetLeftLog(player.displayName);
             string[] logs = Add(PerseLog(_logStrings), currentLog);
             logs = Clamp(logs, _logObjects.Length);
             DispLog(logs);
             _logStrings = CreateLogStrings(logs);
-            RequestSerialization();
+            RequestSyncVariable();
         }
         public override void OnDeserialization()
         {
             DispLog(PerseLog(_logStrings));
         }
-        public void ForceSync()
-        {
-            RequestSerialization();
-        }
-        public void DispLog(string[] logs)
+        private void DispLog(string[] logs)
         {
             for (int i = 0; i < _logObjects.Length; i++)
             {
@@ -101,9 +91,9 @@ namespace Kamishiro.VRChatUDON.GKLog
                 _logObjects[i].SetText(logs[i]);
                 _logObjects[i].transform.SetAsFirstSibling();
             }
-            scrollView.AdjustScrollView();
+            scrollRect.CalculateLayoutInputVertical();
         }
-        public string CreateLogStrings(string[] vs)
+        private string CreateLogStrings(string[] vs)
         {
             string logStrings = "";
             for (int i = 0; i < vs.Length; i++)
@@ -115,7 +105,7 @@ namespace Kamishiro.VRChatUDON.GKLog
             }
             return logStrings;
         }
-        public string[] PerseLog(string logStrings)
+        private string[] PerseLog(string logStrings)
         {
             string[] splitedLogs = logStrings.Split(',');
             string[] logs = new string[] { };
@@ -151,15 +141,15 @@ namespace Kamishiro.VRChatUDON.GKLog
             }
             return logs;
         }
-        public string GetJoinLog(string playerDisplayName)
+        private string GetJoinLog(string playerDisplayName)
         {
             return "1" + DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss") + playerDisplayName;
         }
-        public string GetLeftLog(string playerDisplayName)
+        private string GetLeftLog(string playerDisplayName)
         {
             return "2" + DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss") + playerDisplayName;
         }
-        public string[] Add(string[] array, string str)
+        private string[] Add(string[] array, string str)
         {
             string[] newArray = new string[array.Length + 1];
             for (int i = 0; i < array.Length; i++)
@@ -169,7 +159,7 @@ namespace Kamishiro.VRChatUDON.GKLog
             newArray[array.Length] = str;
             return newArray;
         }
-        public string[] Clamp(string[] array, int maxLength)
+        private string[] Clamp(string[] array, int maxLength)
         {
             if (array.Length <= maxLength)
                 return array;
@@ -182,8 +172,23 @@ namespace Kamishiro.VRChatUDON.GKLog
             }
             return newArray;
         }
+        public void RequestSyncVariable()
+        {
+            if (!isSyncStandby) return;
+            SendCustomEvent(nameof(_DoSyncVariable));
+        }
+        public void _DoSyncVariable()
+        {
+            bool isClogged = Networking.IsClogged;
+
+            if (!isClogged) RequestSerialization();
+            else SendCustomEventDelayedFrames(nameof(_DoSyncVariable), UnityEngine.Random.Range(30, 60) * 10);
+
+            isSyncStandby = !isClogged;
+        }
+
 #if UNITY_EDITOR && !COMPILER_UDONSHARP
-        public void CheckFormats()
+        internal void CheckFormats()
         {
             List<string> joinStrs = new List<string>();
             string[] joinSplitedByTime = Regex.Split(joinFormat, patternTime);
@@ -248,33 +253,7 @@ namespace Kamishiro.VRChatUDON.GKLog
                 }
             }
         }
-        public void CheckLogObjects()
-        {
-
-            LogObject[] los = GetComponentsInChildren<LogObject>();
-            if (los.Length != _logObjects.Length)
-            {
-                SetLogObjects(los);
-                return;
-            }
-
-            for (int i = 0; i < los.Length; i++)
-            {
-                if (_logObjects[i] == los[i])
-                    continue;
-
-                SetLogObjects(los);
-                return;
-            }
-        }
-        public void SetLogObjects(LogObject[] los)
-        {
-            Debug.Log($"Set {los.Length} objects.");
-            _logObjects = los;
-            Undo.RecordObject(this, "GKLog - Setup LogObjects");
-            EditorUtility.SetDirty(this);
-        }
-        public void SetMainCam()
+        internal void SetMainCam()
         {
             if (string.IsNullOrWhiteSpace(gameObject.scene.path))
                 return;
@@ -301,10 +280,16 @@ namespace Kamishiro.VRChatUDON.GKLog
     [CustomEditor(typeof(PlayerLogSystem))]
     internal class PlayerLogEditor : Editor
     {
+        private enum Language { English, Japanese }
+
+        #region LogSetting
         private SerializedProperty _timeFormat;
         private SerializedProperty _scrollView;
         private SerializedProperty _joinFormat;
         private SerializedProperty _leftFormat;
+        private SerializedProperty _logObjects;
+        #endregion
+
         private string _playerName = "Player Name";
         private PlayerLogSystem _playerLog;
         private readonly GUIStyle _style = new GUIStyle();
@@ -330,8 +315,9 @@ namespace Kamishiro.VRChatUDON.GKLog
         private void OnEnable()
         {
             _style.richText = true;
+            _logObjects = serializedObject.FindProperty(nameof(PlayerLogSystem._logObjects));
             _timeFormat = serializedObject.FindProperty(nameof(PlayerLogSystem.timeFormat));
-            _scrollView = serializedObject.FindProperty(nameof(PlayerLogSystem.scrollView));
+            _scrollView = serializedObject.FindProperty(nameof(PlayerLogSystem.scrollRect));
             _joinFormat = serializedObject.FindProperty(nameof(PlayerLogSystem.joinFormat));
             _leftFormat = serializedObject.FindProperty(nameof(PlayerLogSystem.leftFormat));
             headerTexture = AssetDatabase.LoadAssetAtPath(AssetDatabase.GUIDToAssetPath(guidHeader), typeof(Texture)) as Texture;
@@ -469,6 +455,7 @@ namespace Kamishiro.VRChatUDON.GKLog
             EditorGUILayout.LabelField("Object Reference", EditorStyles.boldLabel);
             EditorGUI.indentLevel++;
             EditorGUILayout.PropertyField(_scrollView);
+            EditorGUILayout.PropertyField(_logObjects);
             EditorGUI.indentLevel--;
 
             EditorGUILayout.Space();
@@ -506,8 +493,6 @@ namespace Kamishiro.VRChatUDON.GKLog
             serializedObject.ApplyModifiedProperties();
 
             _playerLog.CheckFormats();
-            _playerLog.CheckLogObjects();
-            _playerLog.SetMainCam();
         }
     }
 #endif

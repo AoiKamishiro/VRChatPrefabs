@@ -12,28 +12,30 @@ using VRC.SDKBase;
 
 namespace Kamishiro.VRChatUDON.GKLog
 {
+    [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     public class PlayerCounter : UdonSharpBehaviour
     {
         public Text _uiText;
         public TextMeshProUGUI _tmText;
         public string suffix = "";
-        private int players = 0;
+        private VRCPlayerApi[] playerApis = new VRCPlayerApi[80];
 
         public override void OnPlayerJoined(VRCPlayerApi player)
         {
-            players += 1;
-            if (_uiText != null)
-                _uiText.text = players.ToString().PadLeft(2, '0') + suffix;
-            if (_tmText != null)
-                _tmText.text = players.ToString().PadLeft(2, '0') + suffix;
+            CountPlayer();
         }
         public override void OnPlayerLeft(VRCPlayerApi player)
         {
-            players -= 1;
-            if (_uiText != null)
-                _uiText.text = players.ToString().PadLeft(2, '0') + suffix;
-            if (_tmText != null)
-                _tmText.text = players.ToString().PadLeft(2, '0') + suffix;
+            CountPlayer();
+        }
+        private void CountPlayer()
+        {
+            int playerCount = 0;
+            playerApis = VRCPlayerApi.GetPlayers(playerApis);
+            foreach (VRCPlayerApi playerApi in playerApis) if (Utilities.IsValid(playerApi)) playerCount++;
+
+            if (_uiText != null) _uiText.text = playerCount.ToString().PadLeft(2, '0') + suffix;
+            if (_tmText != null) _tmText.text = playerCount.ToString().PadLeft(2, '0') + suffix;
         }
     }
 }

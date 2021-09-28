@@ -1,8 +1,8 @@
 # VRCSDK3 Udon用 プレイヤーログシステム GKLog
-![HeaderImage](img01.jpg)
+![HeaderImage](_Resources/Images/img01.jpg)
 
-version 2.0  
-<!-- [English Readme][00] -->
+version 2.2  
+[English Readme][00]
 
 制作：神城アオイ([@aoi3192][01])  
 
@@ -21,8 +21,8 @@ version 2.0
 3. 00Kamishiro/GKLog 内のお好みのプレハブをシーン内に設置してください。  
 
 ### 各プレハブの相違
-* GKLog_v2.0 - UI Text を使用したプレハブです。 
-* GKLog_v2.0_TMP -  TextMeshPro を使用したプレハブです。 
+* GKLog_v2.2 - UI Text を使用したプレハブです。 
+* GKLog_v2.2T - TextMeshPro を使用したプレハブです。 
 
 ## 利用規約
 * UnityPackage内のアセットは、[MIT License][61]の下で配布しております。  
@@ -37,10 +37,10 @@ version 2.0
 [Vket: 神城工業][92]  
 [Github: 神城アオイ][93]  
 
-<!-- [00]:README-en.md -->
+[00]:GKLog-README_EN.md
 [01]:https://twitter.com/aoi3192
-[21]:https://github.com/AoiKamishiro/VRC_UdonPrefabs/releases
-[61]:https://github.com/AoiKamishiro/VRC_UdonPrefabs/blob/master/LICENSE
+[21]:https://github.com/AoiKamishiro/VRChatPrefabs/releases
+[61]:https://github.com/AoiKamishiro/VRChatPrefabs/blob/master/LICENSE
 [71]:https://kamishirolab.booth.pm/items/2521621
 [81]:https://discord.gg/8muNKrzaSK
 [82]:https://twitter.com/aoi3192

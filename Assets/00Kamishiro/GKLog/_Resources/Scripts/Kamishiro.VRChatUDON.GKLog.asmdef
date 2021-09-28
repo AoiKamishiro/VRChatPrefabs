@@ -9,12 +9,33 @@
         "VRC.Udon.Editor.UPMImporter",
         "VRC.Udon.Serialization.OdinSerializer"
     ],
-    "optionalUnityReferences": [],
-    "includePlatforms": [],
+    "includePlatforms": [
+        "Android",
+        "CloudRendering",
+        "Editor",
+        "GameCoreScarlett",
+        "GameCoreXboxOne",
+        "iOS",
+        "LinuxStandalone64",
+        "Lumin",
+        "macOSStandalone",
+        "PS4",
+        "PS5",
+        "Stadia",
+        "Switch",
+        "tvOS",
+        "WSA",
+        "WebGL",
+        "WindowsStandalone32",
+        "WindowsStandalone64",
+        "XboxOne"
+    ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
-    "defineConstraints": []
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }
