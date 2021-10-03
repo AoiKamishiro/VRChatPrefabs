@@ -4,9 +4,9 @@
 ### アセットについて  
 VRCSDK3向けに作成した色々なギミックを配布するリポジトリです。  
 現時点では以下のものが含まれています。　　
-* [GKLog](https://github.com/AoiKamishiro/VRC_UdonPrefabs/blob/master/Assets/00Kamishiro/GKLog/GKLog-README_JP.md) (入退室ログシステム：スクロール・後入り同期)  
+* [GKLog](https://github.com/AoiKamishiro/VRChatPrefabs/blob/master/Assets/00Kamishiro/GKLog/GKLog-README_JP.md) (入退室ログシステム：スクロール・後入り同期)  
 * [AAChair](https://github.com/AoiKamishiro/VRChatPrefabs/blob/master/Assets/00Kamishiro/AAChair/AAChair-README_JP.md) (自動調節椅子)
-* [AKSwitch](https://github.com/AoiKamishiro/VRC_UdonPrefabs/blob/master/Assets/00Kamishiro/AKSwitch/_Resources/Documents/AKSwitch-README_JP.md) (汎用タッチスイッチ)  
+* [AKSwitch](https://github.com/AoiKamishiro/VRChatPrefabs/blob/master/Assets/00Kamishiro/AKSwitch/_Resources/Documents/AKSwitch-README_JP.md) (汎用タッチスイッチ)  
 
 ### 想定環境  
 * Unity 2019.4.30f1  
