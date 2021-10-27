@@ -73,7 +73,7 @@ v2f vert(appdata v)
     //UNITY_TRANSFER_INSTANCE_ID(v, o);
     o.pos = UnityObjectToClipPos(v.vertex);
     o.texcoord = TRANSFORM_TEX(v.texcoord, _MainTex);
-    UNITY_TRANSFER_FOG(o, o.vertex);
+    UNITY_TRANSFER_FOG(o, v.vertex);
 
     VertCore(_MainTex, o.data1, o.data2);
     #ifdef Calendar_Lighting
