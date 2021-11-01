@@ -12,6 +12,7 @@ using VRC.SDKBase;
 
 namespace Kamishiro.VRChatUDON.AKSwitch
 {
+    [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     public class HeightCalculator : UdonSharpBehaviour
     {
         public AKSwitch aKSwitch;
@@ -30,7 +31,7 @@ namespace Kamishiro.VRChatUDON.AKSwitch
                 return;
             }
 
-            if (aKSwitch.isMain)
+            if (aKSwitch.isMainSwitch)
                 SendCustomEventDelayedSeconds(nameof(_GetAvatarHeight), samplengTimeSpan);
             else
                 gameObject.SetActive(false);

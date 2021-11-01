@@ -11,6 +11,7 @@ using VRC.SDKBase;
 
 namespace Kamishiro.VRChatUDON.AKSwitch
 {
+    [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     public class PlayerTrackpointTracker : UdonSharpBehaviour
     {
         public TrackerActivator trackerActivator;

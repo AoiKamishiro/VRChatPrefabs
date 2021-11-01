@@ -17,7 +17,7 @@ MonoBehaviour:
   udonAssembly: 
   assemblyError: 
   sourceCsScript: {fileID: 11500000, guid: 8461d0f15dea22c44b37ce5d9eb08c2b, type: 3}
-  behaviourSyncMode: 0
+  behaviourSyncMode: 4
   behaviourIDHeapVarName: __refl_const_intnl_udonTypeID
   compileErrors: []
   hasInteractEvent: 0
@@ -1119,7 +1119,7 @@ MonoBehaviour:
       Data: 
     - Name: $k
       Entry: 1
-      Data: isMain
+      Data: isMainSwitch
     - Name: $v
       Entry: 7
       Data: 63|UdonSharp.Compiler.FieldDefinition, UdonSharp.Editor
@@ -1140,10 +1140,10 @@ MonoBehaviour:
       Data: SystemBoolean
     - Name: symbolOriginalName
       Entry: 1
-      Data: isMain
+      Data: isMainSwitch
     - Name: symbolUniqueName
       Entry: 1
-      Data: isMain
+      Data: isMainSwitch
     - Name: symbolDefaultValue
       Entry: 6
       Data: 

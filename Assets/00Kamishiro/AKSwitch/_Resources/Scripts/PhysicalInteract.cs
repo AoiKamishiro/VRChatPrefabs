@@ -11,6 +11,7 @@ using UnityEngine;
 
 namespace Kamishiro.VRChatUDON.AKSwitch
 {
+    [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     public class PhysicalInteract : UdonSharpBehaviour
     {
         private Collider _enteredCollider;

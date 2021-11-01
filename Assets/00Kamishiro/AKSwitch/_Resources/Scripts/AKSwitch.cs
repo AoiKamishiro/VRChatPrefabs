@@ -21,6 +21,7 @@ using Object = UnityEngine.Object;
 
 namespace Kamishiro.VRChatUDON.AKSwitch
 {
+    [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     public class AKSwitch : UdonSharpBehaviour
     {
         #region General Seting
@@ -46,7 +47,7 @@ namespace Kamishiro.VRChatUDON.AKSwitch
         public Color toggleColor5 = new Color(0, 0, 0, 1);
         #endregion
         #region Internal Reference
-        public bool isMain;
+        public bool isMainSwitch;
         public PhysicalInteract physicalInteract;
         public RaycastInteract raycastInteract;
         public UdonBehaviour raycastInteractU;
@@ -145,10 +146,8 @@ namespace Kamishiro.VRChatUDON.AKSwitch
         }
         public void _SetSwitchMode()
         {
-            if (useRaycastModeOnly || !_lp.IsUserInVR())
-                SendCustomEvent(nameof(_RaycastMode));
-            else
-                SendCustomEvent(nameof(_PhysicalMode));
+            if (useRaycastModeOnly || !_lp.IsUserInVR()) SendCustomEvent(nameof(_RaycastMode));
+            else SendCustomEvent(nameof(_PhysicalMode));
         }
         public void _SetPositionByAvatarHeight()
         {
@@ -173,8 +172,7 @@ namespace Kamishiro.VRChatUDON.AKSwitch
         }
         public override void OnPlayerJoined(VRCPlayerApi player)
         {
-            if (!isGlobal || player != _lp)
-                return;
+            if (!isGlobal || player != _lp) return;
 
             SendCustomNetworkEvent(NetworkEventTarget.Owner, nameof(RequestedState));
         }
@@ -184,49 +182,43 @@ namespace Kamishiro.VRChatUDON.AKSwitch
         }
         public void _SendExternalEvent()
         {
-            if (_exUdonEnable)
-                otherUdon.SendCustomEvent(method);
+            if (_exUdonEnable) otherUdon.SendCustomEvent(method);
 
-            if (_exAnimatorEnable)
-                animator.SetInteger(param, _localState + 1);
+            if (_exAnimatorEnable) animator.SetInteger(param, _localState + 1);
         }
         public void _SetMaterialParameter()
         {
-            if (_materialEnable)
-                iconRenderer.materials[materialIndex].SetColor(materialParam, _stepColors[_localState]);
+            if (_materialEnable) iconRenderer.materials[materialIndex].SetColor(materialParam, _stepColors[_localState]);
         }
         public void _PlayAudio()
         {
-            if (_audioEnable)
-                audioSource.Play();
+            if (_audioEnable) audioSource.Play();
         }
         public void _ToggleObjects()
         {
             foreach (GameObject item in _stepObjects[_localState])
             {
-                if (item != null)
-                    item.SetActive(true);
+                if (item != null) item.SetActive(true);
             }
 
             for (int i = 0; i < maxStep; i++)
             {
-                if (i == _localState)
-                    continue;
+                if (i == _localState) continue;
 
                 foreach (GameObject item in _stepObjects[i])
                 {
-                    if (item != null)
-                        item.SetActive(false);
+                    if (item == null) continue;
+                    bool isExclude = false;
+                    foreach (GameObject exclude in _stepObjects[_localState]) if (item == exclude) isExclude = true;
+                    if (!isExclude) item.SetActive(false);
                 }
             }
         }
         public override void OnDeserialization()
         {
-            if (_localState == syncState)
-                return;
+            if (_localState == syncState) return;
 
-            if (!isGlobal)
-                return;
+            if (!isGlobal) return;
 
             _localState = syncState;
             SendCustomEvent(nameof(_SendExternalEvent));
@@ -238,8 +230,7 @@ namespace Kamishiro.VRChatUDON.AKSwitch
         {
             SendCustomEvent(nameof(_LocalOnInteracted));
 
-            if (!isGlobal)
-                return;
+            if (!isGlobal) return;
 
             SendCustomEvent(nameof(_GlobalOnInteracted));
         }
@@ -276,15 +267,12 @@ namespace Kamishiro.VRChatUDON.AKSwitch
         }
         private void SetMaterial()
         {
-            if (iconRenderer == null)
-                return;
+            if (iconRenderer == null) return;
 
             Material[] materials = iconRenderer.sharedMaterials;
-            if (materials == null || materials.Length == 0 || materials.Length < materialIndex)
-                return;
+            if (materials == null || materials.Length == 0 || materials.Length < materialIndex) return;
 
-            if (materials[materialIndex] == material)
-                return;
+            if (materials[materialIndex] == material) return;
 
             materials[materialIndex] = material;
             iconRenderer.sharedMaterials = materials;
@@ -293,14 +281,11 @@ namespace Kamishiro.VRChatUDON.AKSwitch
         }
         private void SetDescriptionText()
         {
-            if (raycastInteractU == null)
-                return;
+            if (raycastInteractU == null) return;
 
-            if (string.IsNullOrWhiteSpace(descriptionText))
-                return;
+            if (string.IsNullOrWhiteSpace(descriptionText)) return;
 
-            if (raycastInteractU.interactText == descriptionText)
-                return;
+            if (raycastInteractU.interactText == descriptionText) return;
 
             raycastInteractU.interactText = descriptionText;
             Undo.RecordObject(raycastInteractU, "AKSwitch - Set Description Text");
@@ -345,12 +330,10 @@ namespace Kamishiro.VRChatUDON.AKSwitch
         }
         private void SetSpriteImage()
         {
-            if (iconRenderer == null || iconRenderer.GetType() != typeof(SpriteRenderer))
-                return;
+            if (iconRenderer == null || iconRenderer.GetType() != typeof(SpriteRenderer)) return;
 
             SpriteRenderer spriteRenderer = iconRenderer as SpriteRenderer;
-            if (spriteRenderer.sprite == iconSprite)
-                return;
+            if (spriteRenderer.sprite == iconSprite) return;
 
             spriteRenderer.sprite = iconSprite;
             Undo.RecordObject(iconRenderer, "AKSwitch - Set Sprite Image");
@@ -362,8 +345,7 @@ namespace Kamishiro.VRChatUDON.AKSwitch
                 return;
 
             SpriteRenderer spriteRenderer = iconRenderer as SpriteRenderer;
-            if (spriteRenderer.color == iconColor)
-                return;
+            if (spriteRenderer.color == iconColor) return;
 
             spriteRenderer.color = iconColor;
             Undo.RecordObject(iconRenderer, "AKSwitch - Set Sprite Color");
@@ -519,7 +501,7 @@ namespace Kamishiro.VRChatUDON.AKSwitch
             _raycastOnly = serializedObject.FindProperty(nameof(AKSwitch.useRaycastModeOnly));
             _iconColor = serializedObject.FindProperty(nameof(AKSwitch.iconColor));
             _iconSprite = serializedObject.FindProperty(nameof(AKSwitch.iconSprite));
-            _isMain = serializedObject.FindProperty(nameof(AKSwitch.isMain));
+            _isMain = serializedObject.FindProperty(nameof(AKSwitch.isMainSwitch));
             _heightAdjustor = serializedObject.FindProperty(nameof(AKSwitch.heightCalculator));
             _touchColliders = serializedObject.FindProperty(nameof(AKSwitch.touchColliders));
             _s_heightAdjustor = serializedObject.FindProperty(nameof(AKSwitch.s_heightCalculator));

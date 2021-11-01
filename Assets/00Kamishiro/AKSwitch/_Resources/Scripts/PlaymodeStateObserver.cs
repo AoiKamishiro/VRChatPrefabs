@@ -17,6 +17,7 @@ namespace Kamishiro.VRChatUDON.AKSwitch
     [InitializeOnLoad]
     public static class PlaymodeStateObserver
     {
+        internal static PlayModeStateChangedType playModeState = PlayModeStateChangedType.Ended;
 
         //ポーズされていたか、実行されていたか
         private static bool _wasPaused = false, _wasPlaying = false;
@@ -166,6 +167,7 @@ namespace Kamishiro.VRChatUDON.AKSwitch
             //現在の状態を保存
             _wasPaused = EditorApplication.isPaused;
             _wasPlaying = EditorApplication.isPlaying;
+            playModeState = playModeStateChangedType;
 
             //ログ表示
             //Debug.Log(playModeStateChangedType.ToString());

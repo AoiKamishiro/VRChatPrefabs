@@ -22,18 +22,11 @@ namespace Kamishiro.VRChatUDON.AKSwitch
         static HierarchyWatcher()
         {
             EditorApplication.hierarchyChanged += OnHierarchyChanged;
-            PlaymodeStateObserver.OnPressedPlayButton += () =>
-            {
-                EditorApplication.hierarchyChanged -= OnHierarchyChanged;
-            };
-            PlaymodeStateObserver.OnEnded += () =>
-           {
-               EditorApplication.hierarchyChanged += OnHierarchyChanged;
-           };
         }
 
         private static void OnHierarchyChanged()
         {
+            if (PlaymodeStateObserver.playModeState != PlaymodeStateObserver.PlayModeStateChangedType.Ended) return;
             MultipleSwitchOptimization();
         }
 
@@ -73,7 +66,7 @@ namespace Kamishiro.VRChatUDON.AKSwitch
         }
         private static bool IsMaster(UdonBehaviour target)
         {
-            bool isMain = target.GetVariable<bool>(nameof(AKSwitch.isMain));
+            bool isMain = target.GetVariable<bool>(nameof(AKSwitch.isMainSwitch));
             if (!isMain)
                 return false;
 
@@ -90,12 +83,12 @@ namespace Kamishiro.VRChatUDON.AKSwitch
         }
         private static void SetCalemdarAsMaster(UdonBehaviour target)
         {
-            target.SetVariavle(nameof(AKSwitch.isMain), true);
+            target.SetVariavle(nameof(AKSwitch.isMainSwitch), true);
             SetMasterObjects(target, target);
         }
         private static void SetCalemdarAsNonMaster(UdonBehaviour target, UdonBehaviour master)
         {
-            target.SetVariavle(nameof(AKSwitch.isMain), false);
+            target.SetVariavle(nameof(AKSwitch.isMainSwitch), false);
             SetMasterObjects(target, master);
         }
         private static void SetMasterObjects(UdonBehaviour target, UdonBehaviour master)
