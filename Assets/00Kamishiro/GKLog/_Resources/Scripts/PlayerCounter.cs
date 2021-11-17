@@ -12,7 +12,7 @@ using VRC.SDKBase;
 
 namespace Kamishiro.VRChatUDON.GKLog
 {
-    [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
+    [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class PlayerCounter : UdonSharpBehaviour
     {
         public Text _uiText;

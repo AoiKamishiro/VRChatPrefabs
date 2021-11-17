@@ -22,6 +22,7 @@ using System.Text.RegularExpressions;
 namespace Kamishiro.VRChatUDON.GKLog
 {
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
+    [DefaultExecutionOrder(-1)]
     public class PlayerLogSystem : UdonSharpBehaviour
     {
         [UdonSynced(UdonSyncMode.None)] private string _logStrings = "\"0[Start] GKLog V2.2 by AoiKamishiro\"";//\"1 2100/12/31 11:59:59 AoiKamishiro\",//UTC

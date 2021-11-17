@@ -1,1 +1,1 @@
-GKLog v2.2.0
+GKLog v2.2.1

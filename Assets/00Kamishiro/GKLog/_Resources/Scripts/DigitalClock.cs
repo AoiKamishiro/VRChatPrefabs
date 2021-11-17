@@ -13,7 +13,7 @@ using UnityEngine.UI;
 
 namespace Kamishiro.VRChatUDON.GKLog
 {
-    [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
+    [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class DigitalClock : UdonSharpBehaviour
     {
         [SerializeField] public Text _uiText;
