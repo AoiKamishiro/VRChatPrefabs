@@ -28,7 +28,7 @@ namespace Kamishiro.VRChatUDON.GKLog
         private string patternPlayer;
         private string patternTime;
 
-        private void Start()
+        public void Init()
         {
             joinFormat = playerLogSystem.joinFormats;
             leftFormat = playerLogSystem.leftFormats;

@@ -43,9 +43,9 @@ namespace Kamishiro.VRChatUDON.GKLog
 
         private void Start()
         {
-            Debug.Log(_logObjects.Length);
             _lp = Networking.LocalPlayer;
             timeSpan = DateTime.Now - DateTime.UtcNow;
+            foreach (LogObject logObject in _logObjects) if (logObject != null) logObject.Init();
         }
         public override void OnPlayerJoined(VRCPlayerApi player)
         {
@@ -283,13 +283,13 @@ namespace Kamishiro.VRChatUDON.GKLog
     {
         private enum Language { English, Japanese }
 
-        #region LogSetting
+    #region LogSetting
         private SerializedProperty _timeFormat;
         private SerializedProperty _scrollView;
         private SerializedProperty _joinFormat;
         private SerializedProperty _leftFormat;
         private SerializedProperty _logObjects;
-        #endregion
+    #endregion
 
         private string _playerName = "Player Name";
         private PlayerLogSystem _playerLog;
