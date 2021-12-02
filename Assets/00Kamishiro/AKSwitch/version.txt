@@ -1,1 +1,1 @@
-AKSwitch v1.0.5
+AKSwitch v1.1.0
