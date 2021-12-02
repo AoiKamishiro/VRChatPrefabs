@@ -94,10 +94,10 @@ namespace Kamishiro.VRChatUDON.AKSwitch
                     _localState = value - 1;
                     if (isGlobal) syncState = _localState;
 
-                    SendCustomEvent(nameof(_SendExternalEvent));
-                    SendCustomEvent(nameof(_SetMaterialParameter));
-                    SendCustomEvent(nameof(_ToggleObjects));
-                    SendCustomEvent(nameof(_PlayAudio));
+                    _SendExternalEvent();
+                    _SetMaterialParameter();
+                    _ToggleObjects();
+                    _PlayAudio();
                 }
             }
         }
@@ -117,6 +117,7 @@ namespace Kamishiro.VRChatUDON.AKSwitch
         private float _playerHeightCalcTimeSpan = 2.0f;
         private float _playerHeightMin = 0.35f;
         private float _playerHeightMax = 2.00f;
+        private bool isSyncStandby = true;
         #endregion
 
         private void Start()
@@ -149,9 +150,9 @@ namespace Kamishiro.VRChatUDON.AKSwitch
             _localState = _initialState;
             syncState = _initialState;
             _prevState = _initialState;
-            SendCustomEvent(nameof(_SendExternalEvent));
-            SendCustomEvent(nameof(_SetMaterialParameter));
-            SendCustomEvent(nameof(_ToggleObjects));
+            _SendExternalEvent();
+            _SetMaterialParameter();
+            _ToggleObjects();
             SendCustomEventDelayedSeconds(nameof(_SetSwitchMode), 5.0f);
             SendCustomEventDelayedSeconds(nameof(_TrackerActivator), 5.0f);
         }
@@ -193,18 +194,14 @@ namespace Kamishiro.VRChatUDON.AKSwitch
         {
             if (!isGlobal || player != _lp) return;
 
-            SendCustomNetworkEvent(NetworkEventTarget.Owner, nameof(RequestedState));
+            SendCustomNetworkEvent(NetworkEventTarget.Owner, nameof(RequestSyncVariable));
         }
-        public void RequestedState()
-        {
-            RequestSerialization();
-        }
-        public void _SendExternalEvent()
+        private void _SendExternalEvent()
         {
             if (_exUdonEnable) otherUdon.SendCustomEvent(method);
             if (_exAnimatorEnable) animator.SetInteger(param, _localState + 1);
         }
-        public void _SetMaterialParameter()
+        private void _SetMaterialParameter()
         {
             if (!_materialEnable) return;
 
@@ -214,11 +211,11 @@ namespace Kamishiro.VRChatUDON.AKSwitch
             Debug.Log(_stepColors[_localState]);
             iconRenderer.SetPropertyBlock(materialPropertyBlock);
         }
-        public void _PlayAudio()
+        private void _PlayAudio()
         {
             if (_audioEnable) audioSource.Play();
         }
-        public void _ToggleObjects()
+        private void _ToggleObjects()
         {
             foreach (GameObject item in _stepObjects[_localState])
             {
@@ -245,39 +242,39 @@ namespace Kamishiro.VRChatUDON.AKSwitch
             if (!isGlobal) return;
 
             _localState = syncState;
-            SendCustomEvent(nameof(_SendExternalEvent));
-            SendCustomEvent(nameof(_SetMaterialParameter));
-            SendCustomEvent(nameof(_ToggleObjects));
-            SendCustomEvent(nameof(_PlayAudio));
+            _SendExternalEvent();
+            _SetMaterialParameter();
+            _ToggleObjects();
+            _PlayAudio();
         }
         public void OnInteracted()
         {
-            SendCustomEvent(nameof(_LocalOnInteracted));
+            _LocalOnInteracted();
 
             if (!isGlobal) return;
 
-            SendCustomEvent(nameof(_GlobalOnInteracted));
+            _GlobalOnInteracted();
         }
-        public void _GlobalOnInteracted()
+        private void _GlobalOnInteracted()
         {
             if (Networking.IsOwner(_lp, gameObject))
             {
                 syncState = _localState;
-                RequestSerialization();
+                RequestSyncVariable();
             }
             else
             {
                 SendCustomNetworkEvent(NetworkEventTarget.Owner, nameof(OnInteracted));
             }
         }
-        public void _LocalOnInteracted()
+        private void _LocalOnInteracted()
         {
             _prevState = _localState;
             _localState = (_localState + 1) <= (maxStep - 1) ? (_localState + 1) : 0;
-            SendCustomEvent(nameof(_SendExternalEvent));
-            SendCustomEvent(nameof(_SetMaterialParameter));
-            SendCustomEvent(nameof(_ToggleObjects));
-            SendCustomEvent(nameof(_PlayAudio));
+            _SendExternalEvent();
+            _SetMaterialParameter();
+            _ToggleObjects();
+            _PlayAudio();
         }
         public void _CalculateAvatarHeight()
         {
@@ -303,6 +300,20 @@ namespace Kamishiro.VRChatUDON.AKSwitch
                 _calculateAvatarHeight = h;
             }
             SendCustomEventDelayedSeconds(nameof(_CalculateAvatarHeight), _playerHeightCalcTimeSpan);
+        }
+        public void RequestSyncVariable()
+        {
+            if (!isSyncStandby) return;
+            SendCustomEvent(nameof(_DoSyncVariable));
+        }
+        public void _DoSyncVariable()
+        {
+            bool isClogged = Networking.IsClogged;
+
+            if (!isClogged) RequestSerialization();
+            else SendCustomEventDelayedFrames(nameof(_DoSyncVariable), UnityEngine.Random.Range(1, 6) * 10);
+
+            isSyncStandby = !isClogged;
         }
 #if UNITY_EDITOR && !COMPILER_UDONSHARP
         public void EditorUpdate()
