@@ -11,6 +11,8 @@ using UnityEngine;
 using VRC.SDKBase;
 using VRC.Udon;
 using VRC.Udon.Common.Interfaces;
+using System.Collections.Generic;
+using System.Linq;
 
 #if UNITY_EDITOR && !COMPILER_UDONSHARP
 using UnityEditor;
@@ -31,8 +33,9 @@ namespace Kamishiro.VRChatUDON.AKSwitch
         public bool isGlobal = false;
         public AudioClip audioClip;
         public int maxStep = 5;
-        public Sprite iconSprite;
+        public Texture2D iconImage;
         public Color iconColor = new Color(1, 1, 1, 1);
+        public Vector4 iconRect = new Vector4(1, 1, 0, 0);
         #endregion
         #region Object Setting
         public GameObject[] toggleGroup1;
@@ -47,19 +50,22 @@ namespace Kamishiro.VRChatUDON.AKSwitch
         public Color toggleColor5 = new Color(0, 0, 0, 1);
         #endregion
         #region Internal Reference
-        public bool isMainSwitch;
+        //public bool isMainSwitch;
         public PhysicalInteract physicalInteract;
         public RaycastInteract raycastInteract;
         public UdonBehaviour raycastInteractU;
         public AudioSource audioSource;
         public Renderer iconRenderer;
-        public Material material;
         public int materialIndex = 0;
-        public string materialParam = "_Emission";
-        public Transform touchColliders;
-        public Transform heightCalculator;
-        public Transform s_touchColliders;
-        public Transform s_heightCalculator;
+        public string materialParamTex = "_ITex";
+        public string materialParamColor = "_IColor";
+        public string materialParamEmission = "_IEmission";
+        public string materialParamRect = "_IRect";
+        private bool isMain = false;
+        public AKSwitch mainAKSwitch;
+        public PlayerBoneTracker[] playerBoneTrackers;
+        public PlayerTrackpointTracker[] playerTrackpointTrackers;
+        public Collider[] trackerColliders;
         #endregion
         #region External Objects
         public UdonBehaviour otherUdon;
@@ -98,20 +104,26 @@ namespace Kamishiro.VRChatUDON.AKSwitch
         private VRCPlayerApi _lp;
         private GameObject[][] _stepObjects;
         private Color[] _stepColors;
-        private bool _materialEnable = false;
+        private MaterialPropertyBlock materialPropertyBlock;
+        private bool _materialEnable = true;
         private bool _audioEnable = false;
         private bool _exUdonEnable = false;
         private bool _exAnimatorEnable = false;
         private int _prevState = 0;
-        private UdonBehaviour _heightAdjustor;
         private Vector3 _basePoint = Vector3.zero;
-        private float _avatarHeight = 1.0f;
-        private const float _timespan = 0.1f;
+        private float _currentAvatarHeight = 1.0f;
+        public float _calculateAvatarHeight = 1.0f;
+        private const float _timespan = 0.5f;
+        private float _playerHeightCalcTimeSpan = 2.0f;
+        private float _playerHeightMin = 0.35f;
+        private float _playerHeightMax = 2.00f;
         #endregion
 
         private void Start()
         {
+            materialPropertyBlock = new MaterialPropertyBlock();
             _lp = Networking.LocalPlayer;
+            isMain = mainAKSwitch == this;
 
             if (_lp == null)
             {
@@ -121,20 +133,18 @@ namespace Kamishiro.VRChatUDON.AKSwitch
 
             _stepObjects = new GameObject[][] { toggleGroup1, toggleGroup2, toggleGroup3, toggleGroup4, toggleGroup5 };
             _stepColors = new Color[] { toggleColor1, toggleColor2, toggleColor3, toggleColor4, toggleColor5 };
-            _materialEnable = iconRenderer != null && iconRenderer.materials.Length > materialIndex && iconRenderer.materials[materialIndex] != null;
+            _materialEnable = iconRenderer != null && iconRenderer.sharedMaterials.Length > materialIndex && iconRenderer.sharedMaterials[materialIndex] != null;
             _audioEnable = audioSource != null && audioClip != null;
             _exUdonEnable = otherUdon != null && !string.IsNullOrWhiteSpace(method);
             _exAnimatorEnable = animator != null && !string.IsNullOrWhiteSpace(param);
-
-            if (_materialEnable) iconRenderer.material = iconRenderer.material;
 
             if (_audioEnable) audioSource.clip = audioClip;
 
             if (useAutomaticHeight)
             {
                 _basePoint = transform.position - transform.up.normalized;
-                _heightAdjustor = (UdonBehaviour)heightCalculator.GetComponent(typeof(UdonBehaviour));
                 SendCustomEventDelayedSeconds(nameof(_SetPositionByAvatarHeight), _timespan);
+                if (isMain) SendCustomEventDelayedSeconds(nameof(_CalculateAvatarHeight), _playerHeightCalcTimeSpan);
             }
             _localState = _initialState;
             syncState = _initialState;
@@ -143,20 +153,29 @@ namespace Kamishiro.VRChatUDON.AKSwitch
             SendCustomEvent(nameof(_SetMaterialParameter));
             SendCustomEvent(nameof(_ToggleObjects));
             SendCustomEventDelayedSeconds(nameof(_SetSwitchMode), 5.0f);
+            SendCustomEventDelayedSeconds(nameof(_TrackerActivator), 5.0f);
         }
         public void _SetSwitchMode()
         {
             if (useRaycastModeOnly || !_lp.IsUserInVR()) SendCustomEvent(nameof(_RaycastMode));
             else SendCustomEvent(nameof(_PhysicalMode));
         }
+        public void _TrackerActivator()
+        {
+            if (_lp.IsUserInVR() && isMain)
+            {
+                foreach (PlayerBoneTracker pbt in playerBoneTrackers) if (pbt != null) pbt.enabled = true;
+                foreach (PlayerTrackpointTracker ptt in playerTrackpointTrackers) if (ptt != null) ptt.enabled = true;
+                foreach (Collider col in trackerColliders) if (col != null) col.enabled = true;
+            }
+        }
         public void _SetPositionByAvatarHeight()
         {
-            float calcedHeight = (float)_heightAdjustor.GetProgramVariable(nameof(HeightCalculator.playerHeight));
-
-            if (_avatarHeight != calcedHeight)
+            float calculateAvatarHeight = mainAKSwitch._calculateAvatarHeight;
+            if (_currentAvatarHeight != calculateAvatarHeight)
             {
-                _avatarHeight = calcedHeight;
-                transform.position = _basePoint + transform.up.normalized * calcedHeight;
+                _currentAvatarHeight = calculateAvatarHeight;
+                transform.position = _basePoint + transform.up.normalized * calculateAvatarHeight;
             }
             SendCustomEventDelayedSeconds(nameof(_SetPositionByAvatarHeight), _timespan);
         }
@@ -183,12 +202,17 @@ namespace Kamishiro.VRChatUDON.AKSwitch
         public void _SendExternalEvent()
         {
             if (_exUdonEnable) otherUdon.SendCustomEvent(method);
-
             if (_exAnimatorEnable) animator.SetInteger(param, _localState + 1);
         }
         public void _SetMaterialParameter()
         {
-            if (_materialEnable) iconRenderer.materials[materialIndex].SetColor(materialParam, _stepColors[_localState]);
+            if (!_materialEnable) return;
+
+            materialPropertyBlock.SetVector(materialParamRect, iconRect);
+            materialPropertyBlock.SetColor(materialParamColor, iconColor);
+            materialPropertyBlock.SetColor(materialParamEmission, _stepColors[_localState]);
+            Debug.Log(_stepColors[_localState]);
+            iconRenderer.SetPropertyBlock(materialPropertyBlock);
         }
         public void _PlayAudio()
         {
@@ -255,26 +279,46 @@ namespace Kamishiro.VRChatUDON.AKSwitch
             SendCustomEvent(nameof(_ToggleObjects));
             SendCustomEvent(nameof(_PlayAudio));
         }
+        public void _CalculateAvatarHeight()
+        {
+            Vector3 pLFoot = _lp.GetBonePosition(HumanBodyBones.LeftFoot);
+            Vector3 pRFoot = _lp.GetBonePosition(HumanBodyBones.RightFoot);
+            Vector3 pLLowLeg = _lp.GetBonePosition(HumanBodyBones.LeftLowerLeg);
+            Vector3 pRLowLeg = _lp.GetBonePosition(HumanBodyBones.RightLowerLeg);
+            Vector3 pLUpLeg = _lp.GetBonePosition(HumanBodyBones.LeftUpperLeg);
+            Vector3 pRUpLeg = _lp.GetBonePosition(HumanBodyBones.RightUpperLeg);
+            Vector3 pSpine = _lp.GetBonePosition(HumanBodyBones.Spine);
+            Vector3 pHead = _lp.GetBonePosition(HumanBodyBones.Head);
 
+            float lowerLegLen = Mathf.Max(Vector3.Distance(pLLowLeg, pLFoot), Vector3.Distance(pRLowLeg, pRFoot));
+            float upperLegLen = Mathf.Max(Vector3.Distance(pLUpLeg, pLLowLeg), Vector3.Distance(pRUpLeg, pRLowLeg));
+            float hipLen = Vector3.Distance(Vector3.LerpUnclamped(pLUpLeg, pRUpLeg, 0.5f), pSpine);
+            float spineLen = Vector3.Distance(pSpine, pHead);
+            float h = lowerLegLen + upperLegLen + hipLen + spineLen;
+            if (h < 0.001f) h = 1.0f;
+            if (Mathf.Abs(_calculateAvatarHeight - h) > 0.01)
+            {
+                if (h < _playerHeightMin) h = _playerHeightMin;
+                if (h > _playerHeightMax) h = _playerHeightMax;
+                _calculateAvatarHeight = h;
+            }
+            SendCustomEventDelayedSeconds(nameof(_CalculateAvatarHeight), _playerHeightCalcTimeSpan);
+        }
 #if UNITY_EDITOR && !COMPILER_UDONSHARP
         public void EditorUpdate()
         {
             SetDescriptionText();
             StepCountCheck();
-            SetMaterial();
-            SetSpriteColor();
-            SetSpriteImage();
+            SetImage();
         }
-        private void SetMaterial()
+        private void SetMaterial(Material mat)
         {
-            if (iconRenderer == null) return;
-
             Material[] materials = iconRenderer.sharedMaterials;
             if (materials == null || materials.Length == 0 || materials.Length < materialIndex) return;
 
-            if (materials[materialIndex] == material) return;
+            if (materials[materialIndex] == mat) return;
 
-            materials[materialIndex] = material;
+            materials[materialIndex] = mat;
             iconRenderer.sharedMaterials = materials;
             Undo.RecordObject(iconRenderer, "AKSwitch - Set Renderer Matrial");
             EditorUtility.SetDirty(iconRenderer);
@@ -328,28 +372,73 @@ namespace Kamishiro.VRChatUDON.AKSwitch
                 EditorUtility.SetDirty(this);
             }
         }
-        private void SetSpriteImage()
+        private void SetImage()
         {
-            if (iconRenderer == null || iconRenderer.GetType() != typeof(SpriteRenderer)) return;
+            if (iconRenderer == null) return;
 
-            SpriteRenderer spriteRenderer = iconRenderer as SpriteRenderer;
-            if (spriteRenderer.sprite == iconSprite) return;
+            string materialFolderpath = AssetDatabase.GUIDToAssetPath("edf459ca3553204488733e389911c5a6");
 
-            spriteRenderer.sprite = iconSprite;
-            Undo.RecordObject(iconRenderer, "AKSwitch - Set Sprite Image");
-            EditorUtility.SetDirty(iconRenderer);
-        }
-        private void SetSpriteColor()
-        {
-            if (iconRenderer == null || iconRenderer.GetType() != typeof(SpriteRenderer))
+            if (iconRenderer == null && iconRenderer.sharedMaterials[materialIndex] == null) return;
+
+            Texture iconTex = iconRenderer.sharedMaterials[materialIndex].GetTexture(materialParamTex);
+
+            bool isEqual;
+            if (iconTex == iconImage) isEqual = true;
+            else if (iconTex == null || iconImage == null) isEqual = false;
+            else isEqual = AssetDatabase.GetAssetPath(iconTex) == AssetDatabase.GetAssetPath(iconImage);
+
+            if (isEqual) return;
+
+            if (iconImage == null)
+            {
+                string emptyMat = materialFolderpath + "/Switch_Icon_.mat";
+                SetMaterial(AssetDatabase.LoadAssetAtPath(emptyMat, typeof(Material)) as Material);
                 return;
+            }
 
-            SpriteRenderer spriteRenderer = iconRenderer as SpriteRenderer;
-            if (spriteRenderer.color == iconColor) return;
+            string materialPath = materialFolderpath + "/Switch_Icon_" + AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(iconImage)) + ".mat";
+            Material existedmaterial = AssetDatabase.LoadAssetAtPath(materialPath, typeof(Material)) as Material;
 
-            spriteRenderer.color = iconColor;
-            Undo.RecordObject(iconRenderer, "AKSwitch - Set Sprite Color");
-            EditorUtility.SetDirty(iconRenderer);
+            if (existedmaterial != null)
+            {
+                SetMaterial(existedmaterial);
+                return;
+            }
+
+            Material newMat = Instantiate<Material>(iconRenderer.sharedMaterials[materialIndex]);
+            newMat.SetTexture(materialParamTex, iconImage);
+            AssetDatabase.CreateAsset(newMat, materialPath);
+
+            SetMaterial(newMat);
+        }
+        public void ApplyMaterialPropertyBlock()
+        {
+            MaterialPropertyBlock materialPropertyBlock = new MaterialPropertyBlock();
+            materialPropertyBlock.SetVector(materialParamRect, iconRect);
+            materialPropertyBlock.SetColor(materialParamColor, iconColor);
+            iconRenderer.SetPropertyBlock(materialPropertyBlock);
+        }
+        public void FixInternalObjectsReference()
+        {
+            AKSwitch aKSwitch = this;
+            aKSwitch.UpdateProxy();
+            aKSwitch.physicalInteract = aKSwitch.GetUdonSharpComponentInChildren<PhysicalInteract>();
+            aKSwitch.raycastInteract = aKSwitch.GetUdonSharpComponentInChildren<RaycastInteract>();
+            aKSwitch.raycastInteractU = aKSwitch.raycastInteract.GetComponent<UdonBehaviour>();
+            aKSwitch.playerTrackpointTrackers = aKSwitch.GetUdonSharpComponentsInChildren<PlayerTrackpointTracker>();
+            aKSwitch.playerBoneTrackers = aKSwitch.GetUdonSharpComponentsInChildren<PlayerBoneTracker>();
+            aKSwitch.trackerColliders = GetComponentsInArrayedObjects<SphereCollider>(aKSwitch.playerTrackpointTrackers).Concat(GetComponentsInArrayedObjects<SphereCollider>(aKSwitch.playerBoneTrackers)).ToArray();
+            aKSwitch.audioSource = aKSwitch.GetComponentInChildren<AudioSource>();
+            aKSwitch.ApplyProxyModifications();
+        }
+        private T[] GetComponentsInArrayedObjects<T>(Component[] components) where T : Component
+        {
+            List<T> list = new List<T>();
+            foreach (Component component in components)
+            {
+                list.Add(component.GetComponent<T>());
+            }
+            return list.ToArray();
         }
 #endif
     }
@@ -370,6 +459,7 @@ namespace Kamishiro.VRChatUDON.AKSwitch
         private SerializedProperty _raycastOnly;
         private SerializedProperty _iconSprite;
         private SerializedProperty _iconColor;
+        private SerializedProperty _iconRect;
         #endregion
         #region Object Setting
         private SerializedProperty _toggleGroup1;
@@ -384,19 +474,19 @@ namespace Kamishiro.VRChatUDON.AKSwitch
         private SerializedProperty _toggleColor5;
         #endregion
         #region Internal Reference
-        private SerializedProperty _isMain;
         private SerializedProperty _physicalInteract;
         private SerializedProperty _raycastInteract;
         private SerializedProperty _raycastInteractU;
         private SerializedProperty _audioSource;
         private SerializedProperty _meshRenderer;
-        private SerializedProperty _material;
         private SerializedProperty _materialIndex;
-        private SerializedProperty _materialParam;
-        private SerializedProperty _touchColliders;
-        private SerializedProperty _heightAdjustor;
-        private SerializedProperty _s_touchColliders;
-        private SerializedProperty _s_heightAdjustor;
+        private SerializedProperty _materialParamColor;
+        private SerializedProperty _materialParamEmission;
+        private SerializedProperty _materialParamIconRect;
+        private SerializedProperty _playerBoneTrackers;
+        private SerializedProperty _playerTrackpointTrackers;
+        private SerializedProperty _trackerColliders;
+        private SerializedProperty _mainAkSwitch;
         #endregion
         #region External Objects
         private SerializedProperty _otherUdon;
@@ -415,7 +505,7 @@ namespace Kamishiro.VRChatUDON.AKSwitch
         private const string guidTwitterIcon = "7c450ce60285c124e921379f9547d8e1";
         private const string urlTwitter = "https://twitter.com/aoi3192";
         private const string urlDiscord = "https://discord.gg/8muNKrzaSK";
-        private const string urlGitHub = "https://github.com/AoiKamishiro/VRC_UdonPrefabs";
+        private const string urlGitHub = "https://github.com/AoiKamishiro/VRChatPrefabs";
         private Texture[] textures;
         private string[] guids;
         private string[] urls;
@@ -437,10 +527,12 @@ namespace Kamishiro.VRChatUDON.AKSwitch
         private readonly GUIContent audioClip_jp = new GUIContent("スイッチ音源", "スイッチを使用した時の効果音");
         private readonly GUIContent raycastOnly_en = new GUIContent("Raycast Mode Only", "It does not switch to physical touch, even when the user is in VR.");
         private readonly GUIContent raycastOnly_jp = new GUIContent("物理スイッチを使用しない", "ユーザーがVRの時でも、物理タッチへの切り替えを行いません。");
-        private readonly GUIContent iconSprite_en = new GUIContent("Icon Sprite", "Image of switch icon");
-        private readonly GUIContent iconSprite_jp = new GUIContent("アイコン画像(Sprite)", "スイッチの画像");
+        private readonly GUIContent iconSprite_en = new GUIContent("Icon Image", "Image of switch icon");
+        private readonly GUIContent iconSprite_jp = new GUIContent("アイコン画像", "スイッチの画像");
         private readonly GUIContent iconColor_en = new GUIContent("Icon Base Color", "Base Color of Switch Icon");
         private readonly GUIContent iconColor_jp = new GUIContent("ベースカラー", "スイッチの色");
+        private readonly GUIContent iconRect_en = new GUIContent("Icon Rect", "x,y - Specifies the number of horizontal and vertical divisions of the image. \nx,y - specifies the number of horizontal and vertical divisions in the image. \nz,w - specifies which part of the image will be used.");
+        private readonly GUIContent iconRect_jp = new GUIContent("アイコン領域", "画像の内、どの部分を使用するか設定します。\nx,y - 画像の縦横の分割数を指定します。 \nz,w - 分割された領域の何番目かを指定します。");
         private readonly GUIContent stepObjectsLabel0_en = new GUIContent("Group 1");
         private readonly GUIContent stepObjectsLabel0_jp = new GUIContent("グループ 1");
         private readonly GUIContent stepObjectsLabel1_en = new GUIContent("Group 2");
@@ -500,12 +592,13 @@ namespace Kamishiro.VRChatUDON.AKSwitch
             _maxStep = serializedObject.FindProperty(nameof(AKSwitch.maxStep));
             _raycastOnly = serializedObject.FindProperty(nameof(AKSwitch.useRaycastModeOnly));
             _iconColor = serializedObject.FindProperty(nameof(AKSwitch.iconColor));
-            _iconSprite = serializedObject.FindProperty(nameof(AKSwitch.iconSprite));
-            _isMain = serializedObject.FindProperty(nameof(AKSwitch.isMainSwitch));
-            _heightAdjustor = serializedObject.FindProperty(nameof(AKSwitch.heightCalculator));
-            _touchColliders = serializedObject.FindProperty(nameof(AKSwitch.touchColliders));
-            _s_heightAdjustor = serializedObject.FindProperty(nameof(AKSwitch.s_heightCalculator));
-            _s_touchColliders = serializedObject.FindProperty(nameof(AKSwitch.s_touchColliders));
+            _iconRect = serializedObject.FindProperty(nameof(AKSwitch.iconRect));
+            _iconSprite = serializedObject.FindProperty(nameof(AKSwitch.iconImage));
+            _mainAkSwitch = serializedObject.FindProperty(nameof(AKSwitch.mainAKSwitch));
+            _playerBoneTrackers = serializedObject.FindProperty(nameof(AKSwitch.playerBoneTrackers));
+            _playerTrackpointTrackers = serializedObject.FindProperty(nameof(AKSwitch.playerTrackpointTrackers));
+            _trackerColliders = serializedObject.FindProperty(nameof(AKSwitch.trackerColliders));
+
             _toggleGroup1 = serializedObject.FindProperty(nameof(AKSwitch.toggleGroup1));
             _toggleGroup2 = serializedObject.FindProperty(nameof(AKSwitch.toggleGroup2));
             _toggleGroup3 = serializedObject.FindProperty(nameof(AKSwitch.toggleGroup3));
@@ -521,9 +614,10 @@ namespace Kamishiro.VRChatUDON.AKSwitch
             _raycastInteractU = serializedObject.FindProperty(nameof(AKSwitch.raycastInteractU));
             _audioSource = serializedObject.FindProperty(nameof(AKSwitch.audioSource));
             _meshRenderer = serializedObject.FindProperty(nameof(AKSwitch.iconRenderer));
-            _material = serializedObject.FindProperty(nameof(AKSwitch.material));
             _materialIndex = serializedObject.FindProperty(nameof(AKSwitch.materialIndex));
-            _materialParam = serializedObject.FindProperty(nameof(AKSwitch.materialParam));
+            _materialParamColor = serializedObject.FindProperty(nameof(AKSwitch.materialParamColor));
+            _materialParamEmission = serializedObject.FindProperty(nameof(AKSwitch.materialParamEmission));
+            _materialParamIconRect = serializedObject.FindProperty(nameof(AKSwitch.materialParamRect));
             _otherUdon = serializedObject.FindProperty(nameof(AKSwitch.otherUdon));
             _method = serializedObject.FindProperty(nameof(AKSwitch.method));
             _animator = serializedObject.FindProperty(nameof(AKSwitch.animator));
@@ -576,6 +670,12 @@ namespace Kamishiro.VRChatUDON.AKSwitch
             textures = new Texture[] { githubTexture, discordTexture, twitterTexture };
             guids = new string[] { guidGitHubIcon, guidDiscordIcon, guidTwitterIcon };
             urls = new string[] { urlGitHub, urlDiscord, urlTwitter };
+
+            if (_akSwitch == null) _akSwitch = target as AKSwitch;
+            MaterialPropertyBlock materialPropertyBlock = new MaterialPropertyBlock();
+            materialPropertyBlock.SetVector(_akSwitch.materialParamRect, _akSwitch.iconRect);
+            materialPropertyBlock.SetColor(_akSwitch.materialParamColor, _akSwitch.iconColor);
+            _akSwitch.iconRenderer.SetPropertyBlock(materialPropertyBlock);
         }
         private void DrawReordableList(ReorderableList reorderableList, int indentLevel)
         {
@@ -654,14 +754,12 @@ namespace Kamishiro.VRChatUDON.AKSwitch
                     return;
                 UdonSharpGUI.DrawSyncSettings(obj);
                 UdonSharpGUI.DrawUtilities(obj);
-                //UdonSharpGUI.DrawUILine();
                 EditorGUI.indentLevel--;
             }
         }
         public override void OnInspectorGUI()
         {
-            if (_akSwitch == null)
-                _akSwitch = target as AKSwitch;
+            if (_akSwitch == null) _akSwitch = target as AKSwitch;
 
             EditorGUILayout.Space();
             EditorGUILayout.Space();
@@ -670,6 +768,7 @@ namespace Kamishiro.VRChatUDON.AKSwitch
             ShurikenUI.Header(lang == Language.Japanese ? generalSetting_jp : generalSetting_en);
             EditorGUI.indentLevel++;
 
+            EditorGUI.BeginChangeCheck();
             lang = (Language)EditorGUILayout.EnumPopup(lang == Language.Japanese ? langageLabel_jp : langageLabel_en, lang);
             EditorGUILayout.PropertyField(_descriptionText, lang == Language.Japanese ? descriptionTextLabel_jp : descriptionTextLabel_en, true);
             EditorGUILayout.PropertyField(_isGlobal, lang == Language.Japanese ? isGlobalLabel_jp : isGlobalLabel_en, true);
@@ -678,6 +777,7 @@ namespace Kamishiro.VRChatUDON.AKSwitch
             EditorGUILayout.PropertyField(_raycastOnly, lang == Language.Japanese ? raycastOnly_jp : raycastOnly_en, true);
             EditorGUILayout.PropertyField(_iconSprite, lang == Language.Japanese ? iconSprite_jp : iconSprite_en, true);
             EditorGUILayout.PropertyField(_iconColor, lang == Language.Japanese ? iconColor_jp : iconColor_en, true);
+            EditorGUILayout.PropertyField(_iconRect, lang == Language.Japanese ? iconRect_jp : iconRect_en, true);
             EditorGUI.indentLevel--;
 
 
@@ -751,12 +851,14 @@ namespace Kamishiro.VRChatUDON.AKSwitch
                 EditorGUI.indentLevel++;
                 EditorGUILayout.LabelField("Renderer Setting", EditorStyles.boldLabel);
                 EditorGUI.indentLevel++;
-                EditorGUILayout.PropertyField(_material, true);
                 EditorGUILayout.PropertyField(_materialIndex, true);
-                EditorGUILayout.PropertyField(_materialParam, true);
+                EditorGUILayout.PropertyField(_materialParamColor, true);
+                EditorGUILayout.PropertyField(_materialParamEmission, true);
+                EditorGUILayout.PropertyField(_materialParamIconRect, true);
                 EditorGUI.indentLevel--;
                 EditorGUILayout.LabelField("Object Reference", EditorStyles.boldLabel);
                 EditorGUI.indentLevel++;
+                //if (GUILayout.Button("FixInternalObjects")) _akSwitch.FixInternalObjectsReference();
                 using (new EditorGUI.DisabledScope(true))
                 {
                     EditorGUILayout.PropertyField(_physicalInteract, true);
@@ -764,17 +866,16 @@ namespace Kamishiro.VRChatUDON.AKSwitch
                     EditorGUILayout.PropertyField(_raycastInteractU, true);
                     EditorGUILayout.PropertyField(_audioSource, true);
                     EditorGUILayout.PropertyField(_meshRenderer, true);
+                    EditorGUILayout.PropertyField(_playerBoneTrackers, true);
+                    EditorGUILayout.PropertyField(_playerTrackpointTrackers, true);
+                    EditorGUILayout.PropertyField(_trackerColliders, true);
                 }
                 EditorGUI.indentLevel--;
                 EditorGUILayout.LabelField("Multi Switch Setting (Auto Setup)", EditorStyles.boldLabel);
                 EditorGUI.indentLevel++;
                 using (new EditorGUI.DisabledScope(true))
                 {
-                    EditorGUILayout.PropertyField(_isMain, true);
-                    EditorGUILayout.PropertyField(_heightAdjustor, true);
-                    EditorGUILayout.PropertyField(_touchColliders, true);
-                    EditorGUILayout.PropertyField(_s_heightAdjustor, true);
-                    EditorGUILayout.PropertyField(_s_touchColliders, true);
+                    EditorGUILayout.PropertyField(_mainAkSwitch, true);
                 }
                 EditorGUI.indentLevel--;
                 EditorGUI.indentLevel--;
@@ -802,6 +903,10 @@ namespace Kamishiro.VRChatUDON.AKSwitch
             EditorGUILayout.Space();
 
             serializedObject.ApplyModifiedProperties();
+
+
+            if (EditorGUI.EndChangeCheck()) _akSwitch.ApplyMaterialPropertyBlock();
+
             _akSwitch.EditorUpdate();
         }
     }

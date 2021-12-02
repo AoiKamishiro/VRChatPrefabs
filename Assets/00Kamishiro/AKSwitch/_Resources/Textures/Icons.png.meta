@@ -1,49 +1,7 @@
 fileFormatVersion: 2
-guid: 14912ba61a888c74fa797c2e329f0250
+guid: 6cc18c8cde1aa55449ea17313472b31e
 TextureImporter:
-  internalIDToNameTable:
-  - first:
-      213: 21300000
-    second: Camera
-  - first:
-      213: 21300002
-    second: Pen
-  - first:
-      213: 21300004
-    second: Bed
-  - first:
-      213: 21300006
-    second: Light
-  - first:
-      213: 21300008
-    second: SE
-  - first:
-      213: 21300010
-    second: Mirror
-  - first:
-      213: 21300012
-    second: Object
-  - first:
-      213: 21300014
-    second: Lamp
-  - first:
-      213: 21300016
-    second: Chair
-  - first:
-      213: 21300018
-    second: Video
-  - first:
-      213: 21300020
-    second: Collider
-  - first:
-      213: 21300022
-    second: Night
-  - first:
-      213: 21300024
-    second: Key
-  - first:
-      213: 21300026
-    second: Music
+  internalIDToNameTable: []
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -63,7 +21,7 @@ TextureImporter:
     heightScale: 0.25
     normalMapFilter: 0
   isReadable: 0
-  streamingMipmaps: 0
+  streamingMipmaps: 1
   streamingMipmapsPriority: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
@@ -78,11 +36,11 @@ TextureImporter:
     mipBias: 0
     wrapU: 1
     wrapV: 1
-    wrapW: 0
-  nPOTScale: 0
+    wrapW: 1
+  nPOTScale: 1
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 0
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -93,13 +51,13 @@ TextureImporter:
   alphaUsage: 1
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
-  textureType: 8
+  textureType: 0
   textureShape: 1
   singleChannelComponent: 0
   maxTextureSizeSet: 0
   compressionQualitySet: 0
   textureFormatSet: 0
-  applyGammaDecoding: 1
+  applyGammaDecoding: 0
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -139,305 +97,11 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites:
-    - serializedVersion: 2
-      name: Camera
-      rect:
-        serializedVersion: 2
-        x: 2
-        y: 3181
-        width: 508
-        height: 915
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 6fa186b94d28eeb48b0baf3e7cd0863b
-      internalID: 21300000
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Pen
-      rect:
-        serializedVersion: 2
-        x: 514
-        y: 3181
-        width: 508
-        height: 915
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 776ba61322559ac4690c11abf6c9b2d0
-      internalID: 21300002
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Bed
-      rect:
-        serializedVersion: 2
-        x: 1026
-        y: 3181
-        width: 508
-        height: 915
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: f4e9bf3ef6cfaeb46b89bd81ff342886
-      internalID: 21300004
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Light
-      rect:
-        serializedVersion: 2
-        x: 1538
-        y: 3181
-        width: 508
-        height: 915
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: d4e603534bbf7fa45a93c8b02cde6a27
-      internalID: 21300006
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: SE
-      rect:
-        serializedVersion: 2
-        x: 2050
-        y: 3181
-        width: 508
-        height: 915
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: aecfea2b20b8dbd41a7e7a7c2159e45a
-      internalID: 21300008
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Mirror
-      rect:
-        serializedVersion: 2
-        x: 2562
-        y: 3181
-        width: 508
-        height: 915
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: d5c7ddb3a9bc4ce4fa69618c794b95fb
-      internalID: 21300010
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Object
-      rect:
-        serializedVersion: 2
-        x: 3074
-        y: 3181
-        width: 508
-        height: 915
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 6f45480e236c7cc42b41dc70a69e5b86
-      internalID: 21300012
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Lamp
-      rect:
-        serializedVersion: 2
-        x: 2
-        y: 2264
-        width: 508
-        height: 915
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 48c43b238d76bfa429a0f27ea6558443
-      internalID: 21300014
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Chair
-      rect:
-        serializedVersion: 2
-        x: 514
-        y: 2262
-        width: 508
-        height: 915
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 7f92f120f4ae47541a86780dfc4c43de
-      internalID: 21300016
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Video
-      rect:
-        serializedVersion: 2
-        x: 1026
-        y: 2264
-        width: 508
-        height: 915
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: d919d52b53fb25e44844b4958a28860d
-      internalID: 21300018
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Collider
-      rect:
-        serializedVersion: 2
-        x: 1538
-        y: 2264
-        width: 508
-        height: 915
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 4f24b15ee2a1e144184247092668f258
-      internalID: 21300020
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Night
-      rect:
-        serializedVersion: 2
-        x: 2050
-        y: 2264
-        width: 508
-        height: 915
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: e4df0fe4a8635f643883112e93b0ec28
-      internalID: 21300022
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Key
-      rect:
-        serializedVersion: 2
-        x: 2562
-        y: 2264
-        width: 508
-        height: 915
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: f9869902952313c4ba11b7f1031effe4
-      internalID: 21300024
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Music
-      rect:
-        serializedVersion: 2
-        x: 3074
-        y: 2264
-        width: 508
-        height: 915
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: fb4e8a8ff388cd24a93ccd1a4c712c49
-      internalID: 21300026
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
+    sprites: []
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 8cdfca2976aa48348b520aa78ad24ca7
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 

@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace Kamishiro.VRChatUDON.AKSwitch
 {
-    [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
+    [UdonBehaviourSyncMode(BehaviourSyncMode.NoVariableSync)]
     public class RaycastInteract : UdonSharpBehaviour
     {
         public Animator animator;
@@ -21,8 +21,7 @@ namespace Kamishiro.VRChatUDON.AKSwitch
         public override void Interact()
         {
             akSwitch.SendCustomEventDelayedSeconds(nameof(AKSwitch.OnInteracted), 0.2f);
-            if (animator != null)
-                animator.SetTrigger(param);
+            if (animator != null)  animator.SetTrigger(param);
         }
         public void _EnableRaycastInteraction()
         {

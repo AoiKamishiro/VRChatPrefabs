@@ -11,19 +11,17 @@ using VRC.SDKBase;
 
 namespace Kamishiro.VRChatUDON.AKSwitch
 {
-    [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
+    [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class PlayerTrackpointTracker : UdonSharpBehaviour
     {
-        public TrackerActivator trackerActivator;
         public VRCPlayerApi.TrackingDataType trackType = VRCPlayerApi.TrackingDataType.LeftHand;
         public VRC_Pickup.PickupHand hapticHand = VRC_Pickup.PickupHand.None;
         private VRCPlayerApi _lp;
 
-        private void OnEnable()
+        private void Start()
         {
-            _lp = trackerActivator.localPlayer;
+            _lp = Networking.LocalPlayer;
         }
-
         private void Update()
         {
             transform.position = _lp.GetTrackingData(trackType).position;

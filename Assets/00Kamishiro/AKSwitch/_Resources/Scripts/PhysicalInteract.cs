@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace Kamishiro.VRChatUDON.AKSwitch
 {
-    [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
+    [UdonBehaviourSyncMode(BehaviourSyncMode.NoVariableSync)]
     public class PhysicalInteract : UdonSharpBehaviour
     {
         private Collider _enteredCollider;
@@ -43,7 +43,6 @@ namespace Kamishiro.VRChatUDON.AKSwitch
 
             _initPosLocal = startPoint.localPosition;
         }
-
         private void OnTriggerEnter(Collider other)
         {
             if (other == null)
@@ -51,8 +50,7 @@ namespace Kamishiro.VRChatUDON.AKSwitch
 
             PlayerBoneTracker p1 = other.GetComponent<PlayerBoneTracker>();
             PlayerTrackpointTracker p2 = other.GetComponent<PlayerTrackpointTracker>();
-            if (p1 == null && p2 == null)
-                return;
+            if (p1 == null && p2 == null) return;
 
             _enteredCollider = other;
             _enteredPlayerBoneTracker = p1;
@@ -62,46 +60,34 @@ namespace Kamishiro.VRChatUDON.AKSwitch
             _distance = Vector3.Dot(_VVector, _enteredCollider.transform.position - _initPos);
             _switched = false;
         }
-
         private void OnTriggerStay(Collider other)
         {
-            if (other == null)
-                return;
-
-            if (_enteredCollider != other)
-                return;
+            if (other == null || _enteredCollider != other) return;
 
             _initPos = transform.TransformPoint(_initPosLocal);
             _VVector = Vector3.Normalize(_initPos - endPoint.position);
             float delta = _distance - Vector3.Dot(_VVector, _enteredCollider.transform.position - _initPos);
 
-            if (delta < 0)
-                delta = 0;
-            else if (delta > _maxDistance)
-                delta = _maxDistance;
+            if (delta < 0) delta = 0;
+            else if (delta > _maxDistance) delta = _maxDistance;
 
             _pos = _initPos - _VVector * delta;
             SendCustomEvent(nameof(_SetPosition));
 
-            if (_switched)
-                return;
+            if (_switched) return;
 
-            if (delta < _maxDistance)
-                return;
+            if (delta < _maxDistance) return;
 
             akSwitch.SendCustomEvent(nameof(AKSwitch.OnInteracted));
             if (_enteredPlayerBoneTracker != null) _enteredPlayerBoneTracker.SendCustomEvent(nameof(PlayerBoneTracker._PlayHaptics));
             if (_enteredPlayerTrackpointTracker != null) _enteredPlayerTrackpointTracker.SendCustomEvent(nameof(PlayerTrackpointTracker._PlayHaptics));
             _switched = true;
         }
-
         private void OnTriggerExit(Collider other)
         {
-            if (other == null)
-                return;
+            if (other == null) return;
 
-            if (_enteredCollider != other)
-                return;
+            if (_enteredCollider != other) return;
 
             _pos = _initPos;
             _switched = false;
@@ -109,8 +95,7 @@ namespace Kamishiro.VRChatUDON.AKSwitch
         }
         public void _SetPosition()
         {
-            if (startPoint.position != _pos)
-                startPoint.position = _pos;
+            if (startPoint.position != _pos) startPoint.position = _pos;
         }
         public void _EnablePhysicalInteraction()
         {
