@@ -6,8 +6,8 @@ using VRC.Udon;
 
 namespace Kamishiro.VRChatUDON.AAChair
 {
-    [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
-    public class Adjuster : UdonSharpBehaviour
+    [UdonBehaviourSyncMode(BehaviourSyncMode.NoVariableSync)]
+    public class UpdateHandler : UdonSharpBehaviour
     {
         public AutoAdjustStation aAChair;
         private void LateUpdate()

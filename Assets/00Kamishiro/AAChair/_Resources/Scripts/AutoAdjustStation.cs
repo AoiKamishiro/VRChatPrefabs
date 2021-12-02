@@ -2,7 +2,6 @@
 using UdonSharp;
 using UnityEngine;
 using VRC.SDKBase;
-using VRC.Udon.Common.Interfaces;
 
 #if UNITY_EDITOR && !COMPILER_UDONSHARP
 using UnityEditor;
@@ -11,25 +10,25 @@ using UdonSharpEditor;
 
 namespace Kamishiro.VRChatUDON.AAChair
 {
-    [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
+    [UdonBehaviourSyncMode(BehaviourSyncMode.NoVariableSync)]
     public class AutoAdjustStation : UdonSharpBehaviour
     {
-        [UdonSynced(UdonSyncMode.None)] private int playerId = -1;
+        private VRCPlayerApi _tp;
         private VRCPlayerApi _lp;
         private const float _zError = 0.05f;//ふくらはぎ！！
         private const float _yError = 0.05f;//ふともも！！
         private const float _maxValue = 2.0f;
         public Animator anim;
-        public Adjuster adjuster;
-        public Station station;
+        public UpdateHandler adjuster;
+        public StationHandler station;
         public Transform adjustPint;
         public Transform enterPoint;
         private float avatarHeight = 0.0f;
-        private bool _adjustPosition = false;
-        private const string animatorParam = "adjust";
-        private bool isSyncStandby = true;
+        private const string animParam_adjust = "adjust";
+        private const string animParam_stop = "stop";
+        private const string animParam_recaluc = "recaluc";
 
-        private void Start()
+        private void OnEnable()
         {
             _lp = Networking.LocalPlayer;
         }
@@ -37,54 +36,34 @@ namespace Kamishiro.VRChatUDON.AAChair
         {
             station._AAChair_UseAttachedStation(_lp);
         }
+        public void _AAChair_ReCalulateAvatarHeight()
+        {
+            if (_tp == null) return;
+
+            float newHeight = GetAvatarHeight(_tp);
+            if (Mathf.Abs(newHeight - avatarHeight) >= 0.2)
+            {
+                avatarHeight = newHeight;
+                anim.SetTrigger(animParam_adjust);
+            }
+            anim.SetTrigger(animParam_recaluc);
+        }
         public void _AAChair_OnStationEntered(VRCPlayerApi player)
         {
-            if (_lp != player)
-                return;
-
-            anim.SetTrigger(animatorParam);
-            Networking.SetOwner(_lp, gameObject);
-            playerId = player.playerId;
-            SendCustomEvent(nameof(RequestSyncVariable));
+            _tp = player;
+            avatarHeight = GetAvatarHeight(player);
+            anim.ResetTrigger(animParam_stop);
+            anim.SetTrigger(animParam_adjust);
+            anim.SetTrigger(animParam_recaluc);
         }
         public void _AAChair_OnStationExited(VRCPlayerApi player)
         {
-            if (_lp != player)
-                return;
-
-            playerId = -1;
-            SendCustomEvent(nameof(RequestSyncVariable));
+            _tp = null;
+            anim.SetTrigger(animParam_stop);
         }
-        public void RequestSyncVariable()
-        {
-            if (!isSyncStandby) return;
-
-            SendCustomEvent(nameof(_AAChair_DoSyncVariable));
-        }
-        public void _AAChair_DoSyncVariable()
-        {
-            bool isClogged = Networking.IsClogged;
-
-            if (!isClogged) RequestSerialization();
-            else SendCustomEventDelayedSeconds(nameof(_AAChair_DoSyncVariable), 1.0f);
-
-            isSyncStandby = !isClogged;
-        }
-        public override void OnDeserialization()
-        {
-            if (playerId == -1) return;
-
-            SendCustomEventDelayedSeconds(nameof(_AAChair_AdjustPosition), 5.0f);
-        }
-        public override void OnPlayerJoined(VRCPlayerApi player)
-        {
-            if (_lp == player) SendCustomNetworkEvent(NetworkEventTarget.Owner, nameof(RequestSyncVariable));
-        }
-
-
         public void _AAChair_AdjustPosition()
         {
-            enterPoint.localPosition = GetAdjustedPosition(VRCPlayerApi.GetPlayerById(playerId));
+            enterPoint.localPosition = GetAdjustedPosition(_tp);
             enterPoint.localRotation = Quaternion.identity;
         }
         private Vector3 GetAdjustedPosition(VRCPlayerApi player)
@@ -93,7 +72,6 @@ namespace Kamishiro.VRChatUDON.AAChair
             Vector3 scale = transform.lossyScale;
             float maxy = _maxValue / scale.y;
             float maxz = _maxValue / scale.z;
-            avatarHeight = GetAvatarHeight(player);
             Vector3 lflp = transform.InverseTransformPoint(player.GetBonePosition(HumanBodyBones.LeftFoot));
             Vector3 rflp = transform.InverseTransformPoint(player.GetBonePosition(HumanBodyBones.RightFoot));
             Vector3 llllp = transform.InverseTransformPoint(player.GetBonePosition(HumanBodyBones.LeftLowerLeg));

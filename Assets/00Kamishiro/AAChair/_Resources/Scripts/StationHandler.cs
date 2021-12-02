@@ -1,13 +1,11 @@
 ﻿
 using UdonSharp;
-using UnityEngine;
 using VRC.SDKBase;
-using VRC.Udon;
 
 namespace Kamishiro.VRChatUDON.AAChair
 {
-    [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
-    public class Station : UdonSharpBehaviour
+    [UdonBehaviourSyncMode(BehaviourSyncMode.NoVariableSync)]
+    public class StationHandler : UdonSharpBehaviour
     {
         public AutoAdjustStation aAChair;
 
