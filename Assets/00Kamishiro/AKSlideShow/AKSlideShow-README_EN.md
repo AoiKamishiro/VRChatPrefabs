@@ -10,11 +10,11 @@ This is a shader that can switch between up to 32 textures without any prior pro
 Also, since it supports GPU instances, it can reduce the load even when a large number of instances are installed.  
 
 ## Features
-Switch between Unlit and Standard Shading
-Manual mode allows you to manually specify the image to be displayed.
-Selection of four automatic switching modes: Simple/Slide/Texture/XFade.
-Slide mode allows the user to specify the direction of slide (up, down, left, right).
-Use GPU instances to reduce load.
+Switch between Unlit and Standard Shading.  
+Manual mode allows you to manually specify the image to be displayed.  
+Selection of four automatic switching modes: Simple/Slide/Texture/XFade.  
+Slide mode allows the user to specify the direction of slide (up, down, left, right).  
+Use GPU instances to reduce load.   
 
 ## Download
 Please download the latest version from [Release][21] page.  
