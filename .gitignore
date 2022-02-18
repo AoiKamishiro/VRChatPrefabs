@@ -57,15 +57,26 @@ sysinfo.txt
 
 # Crashlytics generated file
 crashlytics-build.properties
+/Assets/*
+!/Assets/00Kamishiro*
+!/Assets/00Kamishiro.meta
 /Assets/00Kamishiro/*/_Dev/*
 /Assets/00Kamishiro/*/_Dev.meta
+
 /Assets/HoshinoLabs*
 /Assets/HoshinoLabs.meta
 /Assets/QHierarchy*
 /Assets/QHierarchy.meta
 /Assets/_LastBuild*
 /Assets/_LastBuild.meta
-/Assets/VRCSDK
-/Assets/VRChat Examples
-/Assets/Udon
+/Assets/VRCSDK*
+/Assets/VRCSDK.meta
+/Assets/VRChat Examples*
+/Assets/VRChat Examples.meta
+/Assets/Udon*
+/Assets/Udon.meta
+/Assets/SerializedUdonPrograms*
+/Assets/SerializedUdonPrograms.meta
+/Assets/Acrylicblock*
+/Assets/Acrylicblock.meta
 /.vscode/*
