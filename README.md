@@ -8,6 +8,7 @@ VRCSDK3向けに作成した色々なギミックを配布するリポジトリ�
 * [AAChair](Assets/00Kamishiro/AAChair/AAChair-README_JP.md) (自動調節椅子)
 * [AKSwitch](Assets/00Kamishiro/AKSwitch/AKSwitch-README_JP.md) (汎用タッチスイッチ)  
 * [EventCalendar](Assets/00Kamishiro/VRCEventCalendarSDK3/EventCalendar-README_JP.md) (イベントカレンダー)  
+* [AKSlideShow](Assets/00Kamishiro/AKSlideShow/AKSlideShow-README_JP.md) (スライドショーシェーダー)  
 
 ### 想定環境  
 * Unity 2019.4.31f1  
@@ -34,7 +35,6 @@ UnityPackageをインポート後、各アセット名のフォルダ内のPrefa
 [Twitter: @aoi3192](https://twitter.com/aoi3192)  
 [Booth: 神城工業](https://kamishirolab.booth.pm/)  
 [Discord: 神城工業](https://discord.gg/8muNKrzaSK)  
-[VRC: 神城アオイ](https://vrchat.com/home/user/usr_19514816-2cf8-43cc-a046-9e2d87d15af7)
 
 [01]:https://mit-license.org/
 [02]:https://creativecommons.org/share-your-work/public-domain/cc0/
