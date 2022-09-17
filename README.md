@@ -18,11 +18,7 @@ VRCSDK3向けに作成した色々なギミックを配布するリポジトリ�
 * UdonSharp  
 
 ### 同梱されている外部アセット  
-* [UdonToolKit](https://github.com/orels1/UdonToolkit)  ([MIT][01])  
-* [VRWorldToolkit](https://github.com/oneVR/VRWorldToolkit)  ([MIT][01])  
-* [UdonSharp](https://github.com/merlinvr/udonsharp)  ([MIT][01])  
-* [CyanEmu](https://github.com/CyanLaser/CyanEmu)  ([MIT][01])  
-* [USharpVideo](https://github.com/MerlinVR/USharpVideo)  ([MIT][01])  
+* [VRWorldToolkit](https://github.com/oneVR/VRWorldToolkit)  ([MIT][01]) 
 * [CC0なVRChat向けマテリアル集](https://coquelicotz.booth.pm/items/2516986) ([CC0][02])  
 * [VRChat向け家具セット(１)](https://coquelicotz.booth.pm/items/1276329) ([CC0][02],[pixabay][03])  
 * [VRChat向け家具セット(２)](https://coquelicotz.booth.pm/items/1573249) ([CC0][02],[pixabay][03])  
