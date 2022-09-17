@@ -1,2 +1,2 @@
 
-RChatEventCalendar v2.0.1
+RChatEventCalendar v3.0.0

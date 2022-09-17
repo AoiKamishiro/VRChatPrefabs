@@ -7,14 +7,14 @@
 
 #if VRC_SDK_VRCSDK3
 
-#if UNITY_EDITOR
+#if UNITY_EDITOR && !COMPILER_UDONSHARP
 using UnityEditor;
 using UnityEngine;
 #endif
 
 namespace Kamishiro.VRChatUDON.VRChatEventCalendar.SDK3
 {
-#if UNITY_EDITOR
+#if UNITY_EDITOR && !COMPILER_UDONSHARP
     public static class ShurikenUI
     {
         private static readonly int HEADER_HEIGHT = 22;

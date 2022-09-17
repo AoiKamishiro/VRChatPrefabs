@@ -36,7 +36,7 @@ namespace Kamishiro.VRChatUDON.VRChatEventCalendar.SDK3
         {
             _LoadButton.interactable = false;
 
-            if (_LoadButton == null || _VideoPlayer == null || _RenderTexture == null || _VRCUrl == VRCUrl.Empty)
+            if (!Utilities.IsValid(_LoadButton) || !Utilities.IsValid(_VideoPlayer) || !Utilities.IsValid(_RenderTexture))
             {
                 Debug.LogError(InitializeError);
                 this.enabled = false;

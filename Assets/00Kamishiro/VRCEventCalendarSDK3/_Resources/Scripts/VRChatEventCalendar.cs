@@ -349,8 +349,7 @@ namespace Kamishiro.VRChatUDON.VRChatEventCalendar.SDK3
             if (fold_udonSetting)
             {
                 EditorGUI.indentLevel++;
-                if (UdonSharpGUI.DrawConvertToUdonBehaviourButton(obj) || UdonSharpGUI.DrawProgramSource(obj))
-                    return;
+                if (UdonSharpGUI.DrawProgramSource(obj)) return;
                 UdonSharpGUI.DrawSyncSettings(obj);
                 UdonSharpGUI.DrawUtilities(obj);
                 //UdonSharpGUI.DrawUILine();

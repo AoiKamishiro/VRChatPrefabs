@@ -7,7 +7,7 @@
 
 #if VRC_SDK_VRCSDK3
 
-#if UNITY_EDITOR
+#if UNITY_EDITOR && !COMPILER_UDONSHARP
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +22,7 @@ using VRC.Udon.Common.Interfaces;
 
 namespace Kamishiro.VRChatUDON.VRChatEventCalendar.SDK3
 {
-#if UNITY_EDITOR
+#if UNITY_EDITOR && !COMPILER_UDONSHARP
     [InitializeOnLoadAttribute]
     public static class HierarchyWatcher
     {
