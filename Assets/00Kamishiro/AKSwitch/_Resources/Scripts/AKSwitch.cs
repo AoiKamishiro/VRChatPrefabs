@@ -432,15 +432,13 @@ namespace Kamishiro.VRChatUDON.AKSwitch
         public void FixInternalObjectsReference()
         {
             AKSwitch aKSwitch = this;
-            aKSwitch.UpdateProxy();
-            aKSwitch.physicalInteract = aKSwitch.GetUdonSharpComponentInChildren<PhysicalInteract>();
-            aKSwitch.raycastInteract = aKSwitch.GetUdonSharpComponentInChildren<RaycastInteract>();
+            aKSwitch.physicalInteract = aKSwitch.GetComponentInChildren<PhysicalInteract>();
+            aKSwitch.raycastInteract = aKSwitch.GetComponentInChildren<RaycastInteract>();
             aKSwitch.raycastInteractU = aKSwitch.raycastInteract.GetComponent<UdonBehaviour>();
-            aKSwitch.playerTrackpointTrackers = aKSwitch.GetUdonSharpComponentsInChildren<PlayerTrackpointTracker>();
-            aKSwitch.playerBoneTrackers = aKSwitch.GetUdonSharpComponentsInChildren<PlayerBoneTracker>();
+            aKSwitch.playerTrackpointTrackers = aKSwitch.GetComponentsInChildren<PlayerTrackpointTracker>();
+            aKSwitch.playerBoneTrackers = aKSwitch.GetComponentsInChildren<PlayerBoneTracker>();
             aKSwitch.trackerColliders = GetComponentsInArrayedObjects<SphereCollider>(aKSwitch.playerTrackpointTrackers).Concat(GetComponentsInArrayedObjects<SphereCollider>(aKSwitch.playerBoneTrackers)).ToArray();
             aKSwitch.audioSource = aKSwitch.GetComponentInChildren<AudioSource>();
-            aKSwitch.ApplyProxyModifications();
         }
         private T[] GetComponentsInArrayedObjects<T>(Component[] components) where T : Component
         {
@@ -761,8 +759,8 @@ namespace Kamishiro.VRChatUDON.AKSwitch
             if (fold_udonSetting)
             {
                 EditorGUI.indentLevel++;
-                if (UdonSharpGUI.DrawConvertToUdonBehaviourButton(obj) || UdonSharpGUI.DrawProgramSource(obj))
-                    return;
+                if ( UdonSharpGUI.DrawProgramSource(obj)) return;
+
                 UdonSharpGUI.DrawSyncSettings(obj);
                 UdonSharpGUI.DrawUtilities(obj);
                 EditorGUI.indentLevel--;

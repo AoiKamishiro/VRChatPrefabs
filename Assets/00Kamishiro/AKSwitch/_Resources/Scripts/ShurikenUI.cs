@@ -6,7 +6,7 @@
  * 
  */
 
-#if UNITY_EDITOR
+#if UNITY_EDITOR && !COMPILER_UDONSHARP
 using UnityEditor;
 using UnityEngine;
 

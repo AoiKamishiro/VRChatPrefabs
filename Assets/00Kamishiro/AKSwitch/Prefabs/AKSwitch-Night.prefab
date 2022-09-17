@@ -7,6 +7,47 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -9093066610090418446, guid: af09589bed5e6c543ac2a3e36f1e9925,
+        type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: -9093066610090418446, guid: af09589bed5e6c543ac2a3e36f1e9925,
+        type: 3}
+    - target: {fileID: -8038691646434043126, guid: af09589bed5e6c543ac2a3e36f1e9925,
+        type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: -8038691646434043126, guid: af09589bed5e6c543ac2a3e36f1e9925,
+        type: 3}
+    - target: {fileID: -2371813714895928975, guid: af09589bed5e6c543ac2a3e36f1e9925,
+        type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: -2371813714895928975, guid: af09589bed5e6c543ac2a3e36f1e9925,
+        type: 3}
+    - target: {fileID: -1858063141601920401, guid: af09589bed5e6c543ac2a3e36f1e9925,
+        type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: -1858063141601920401, guid: af09589bed5e6c543ac2a3e36f1e9925,
+        type: 3}
+    - target: {fileID: -1078314454884052443, guid: af09589bed5e6c543ac2a3e36f1e9925,
+        type: 3}
+      propertyPath: iconRect.z
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: -1078314454884052443, guid: af09589bed5e6c543ac2a3e36f1e9925,
+        type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: -1078314454884052443, guid: af09589bed5e6c543ac2a3e36f1e9925,
+        type: 3}
+    - target: {fileID: 657376363635821198, guid: af09589bed5e6c543ac2a3e36f1e9925,
+        type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 657376363635821198, guid: af09589bed5e6c543ac2a3e36f1e9925,
+        type: 3}
     - target: {fileID: 3103785695844062377, guid: af09589bed5e6c543ac2a3e36f1e9925,
         type: 3}
       propertyPath: m_Name
@@ -185,6 +226,12 @@ PrefabInstance:
       propertyPath: publicVariablesUnityEngineObjects.Array.data[10]
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 8646486286531192289, guid: af09589bed5e6c543ac2a3e36f1e9925,
+        type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 8646486286531192289, guid: af09589bed5e6c543ac2a3e36f1e9925,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: af09589bed5e6c543ac2a3e36f1e9925, type: 3}
 --- !u!114 &6968198506120381718 stripped
