@@ -5,7 +5,7 @@
 //
 // Modified by AoiKamishiro on 2021.07.26
 
-#if UNITY_EDITOR
+#if UNITY_EDITOR && !COMPILER_UDONSHARP
 using System;
 using UnityEditor;
 

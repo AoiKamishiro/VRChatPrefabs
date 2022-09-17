@@ -5,7 +5,7 @@
 * 
 */
 
-#if UNITY_EDITOR
+#if UNITY_EDITOR && !COMPILER_UDONSHARP
 using System.Collections.Generic;
 using System.Linq;
 using UdonSharpEditor;
@@ -52,14 +52,12 @@ namespace Kamishiro.VRChatUDON.GKLog
 
             foreach (UdonBehaviour ud in playerLogSystems)
             {
-                LogObject[] logObjects = ud.gameObject.GetUdonSharpComponentsInChildren<LogObject>();
-                PlayerLogSystem playerLogSystem = ud.gameObject.GetUdonSharpComponent<PlayerLogSystem>();
+                LogObject[] logObjects = ud.gameObject.GetComponentsInChildren<LogObject>();
+                PlayerLogSystem playerLogSystem = ud.gameObject.GetComponent<PlayerLogSystem>();
                 playerLogSystem.SetMainCam();
                 ScrollRect scrollRect = ud.GetComponentInChildren<ScrollRect>();
-                playerLogSystem.UpdateProxy();
                 if (playerLogSystem.scrollRect != scrollRect) playerLogSystem.scrollRect = scrollRect;
                 if (!playerLogSystem._logObjects.ArrayEqual(logObjects)) playerLogSystem._logObjects = logObjects;
-                playerLogSystem.ApplyProxyModifications();
             }
         }
         private static T[] GetComponentsInActiveScene<T>(bool includeInactive = true) where T : Component

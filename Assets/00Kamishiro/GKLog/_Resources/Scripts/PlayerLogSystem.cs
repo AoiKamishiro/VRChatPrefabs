@@ -38,7 +38,7 @@ namespace Kamishiro.VRChatUDON.GKLog
         public string[] leftFormats;
         public readonly string patternTime = "{time}";
         public readonly string patternPlayer = "{player}";
-        public TimeSpan timeSpan;
+        [VRC.Udon.Serialization.OdinSerializer.OdinSerialize] /* UdonSharp auto-upgrade: serialization */ public TimeSpan timeSpan;
         private bool isSyncStandby = true;
 
         private void Start()
@@ -443,8 +443,7 @@ namespace Kamishiro.VRChatUDON.GKLog
 
             EditorGUILayout.LabelField("Udon Setting", EditorStyles.boldLabel);
             EditorGUI.indentLevel++;
-            if (UdonSharpGUI.DrawConvertToUdonBehaviourButton(target) || UdonSharpGUI.DrawProgramSource(target))
-                return;
+            if (UdonSharpGUI.DrawProgramSource(target)) return;
 
             UdonSharpGUI.DrawSyncSettings(target);
             UdonSharpGUI.DrawUtilities(target);

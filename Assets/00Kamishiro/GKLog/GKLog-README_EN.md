@@ -1,7 +1,7 @@
 # PlayrtLogSystem GKLog for VRCSDK3 UDON
 ![HeaderImage](_Resources/Images/img01.jpg)
 
-version 2.2  
+version 3.0  
 [Japanese Readme][00]
 
 Created by：Aoi Kamishiro([@aoi3192][01])  
@@ -21,8 +21,8 @@ Please download the latest version from the [Release][21] page.
 3. Place the prefab in 00Kamishiro/GKLog in the scene.
 
 ### Prefabs
-* GKLog_v2.2 - The prfab made with UI Text.  
-* GKLog_v2.2T - The prfab made with TextMeshPro.  
+* GKLog - The prfab made with UI Text.  
+* GKLog_T - The prfab made with TextMeshPro.  
 
 ## Terms of Use
 * The assets in UnityPackage are distributed under the [MIT License][61].  
