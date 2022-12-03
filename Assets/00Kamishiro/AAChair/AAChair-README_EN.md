@@ -1,7 +1,7 @@
 # Auto Adjustment Chair -AAChair- for VRCSDK3 UDON
 ![HeaderImage](_Resources/Images/ShopImage.png)
 
-version 1.0.2  
+version 2.0.0
 [Japanese Readme][00]  
 
 CreatedBy：AoiKamishiro([@aoi3192][01])  

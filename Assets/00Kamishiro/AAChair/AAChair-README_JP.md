@@ -1,7 +1,7 @@
 # VRCSDK3 Udon用 自動調節椅子 AAChair
 ![HeaderImage](_Resources/Images/ShopImage.png)
 
-version 1.0.2  
+version 2.0.0 
 [English Readme][00]  
 
 制作：神城アオイ([@aoi3192][01])  
