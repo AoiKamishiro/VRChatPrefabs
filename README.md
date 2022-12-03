@@ -7,7 +7,6 @@ VRCSDK3向けに作成した色々なギミックを配布するリポジトリ�
 * [GKLog](Assets/00Kamishiro/GKLog/GKLog-README_JP.md) (入退室ログシステム：スクロール・後入り同期)  
 * [AAChair](Assets/00Kamishiro/AAChair/AAChair-README_JP.md) (自動調節椅子)
 * [AKSwitch](Assets/00Kamishiro/AKSwitch/AKSwitch-README_JP.md) (汎用タッチスイッチ)  
-* [EventCalendar](Assets/00Kamishiro/VRCEventCalendarSDK3/EventCalendar-README_JP.md) (イベントカレンダー)  
 * [AKSlideShow](Assets/00Kamishiro/AKSlideShow/AKSlideShow-README_JP.md) (スライドショーシェーダー)  
 
 ### 想定環境  
