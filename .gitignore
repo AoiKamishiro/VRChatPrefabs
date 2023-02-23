@@ -75,8 +75,8 @@ crashlytics-build.properties
 /Assets/VRChat Examples.meta
 /Assets/Udon*
 /Assets/Udon.meta
-/Assets/SerializedUdonPrograms*
-/Assets/SerializedUdonPrograms.meta
+!/Assets/SerializedUdonPrograms*
+!/Assets/SerializedUdonPrograms.meta
 /Assets/Acrylicblock*
 /Assets/Acrylicblock.meta
 /.vscode/*
