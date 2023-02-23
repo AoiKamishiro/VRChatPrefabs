@@ -11,7 +11,7 @@ using UdonSharp;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Kamishiro.VRChatUDON.GKLog
+namespace online.kamishiro.vrc.udon.gklog
 {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class DigitalClock : UdonSharpBehaviour

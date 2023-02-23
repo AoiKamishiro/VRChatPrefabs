@@ -1,7 +1,7 @@
 # VRCSDK3 Udon用 プレイヤーログシステム GKLog
 ![HeaderImage](_Resources/Images/img01.jpg)
 
-version 3.0  
+version 3.1  
 [English Readme][00]
 
 制作：神城アオイ([@aoi3192][01])  
@@ -16,7 +16,7 @@ version 3.0
 [リリース][21]ページより最新版のダウンロードをお願いします。  
 
 ## 導入方法
-1. 事前に、VRCSDK3 と UdonSharp の最新版のインポートをしてください。
+1. 事前に、VRCSDK3 と UdonSharp の最新版をVCCより導入してください。  
 2. EventSystem がシーン上に無い場合は、UI/Canvas を作るなどして生成させてください。  
 3. 00Kamishiro/GKLog 内のお好みのプレハブをシーン内に設置してください。  
 
@@ -34,7 +34,6 @@ version 3.0
 
 ## 関連サイト
 [Booth: 神城工業][91]  
-[Vket: 神城工業][92]  
 [Github: 神城アオイ][93]  
 
 [00]:GKLog-README_EN.md
@@ -46,5 +45,4 @@ version 3.0
 [82]:https://twitter.com/aoi3192
 [83]:https://www.vrchat.com/home/user/usr_19514816-2cf8-43cc-a046-9e2d87d15af7
 [91]:https://kamishirolab.booth.pm/
-[92]:https://www.v-market.work/ec/shops/1810/detail/
 [93]:https://github.com/AoiKamishiro

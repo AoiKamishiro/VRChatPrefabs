@@ -1,34 +1,18 @@
 {
-    "name": "Kamishiro.VRChatUDON.GKLog",
+    "name": "online.kamishiro.vrc.udon.gklog",
     "references": [
         "UdonSharp.Editor",
         "UdonSharp.Runtime",
         "Unity.TextMeshPro",
         "VRC.Udon",
         "VRC.Udon.Editor",
-        "VRC.Udon.Editor.UPMImporter",
         "VRC.Udon.Serialization.OdinSerializer"
     ],
     "includePlatforms": [
         "Android",
-        "CloudRendering",
         "Editor",
-        "GameCoreScarlett",
-        "GameCoreXboxOne",
-        "iOS",
-        "LinuxStandalone64",
-        "Lumin",
-        "macOSStandalone",
-        "PS4",
-        "PS5",
-        "Stadia",
-        "Switch",
-        "tvOS",
-        "WSA",
-        "WebGL",
         "WindowsStandalone32",
-        "WindowsStandalone64",
-        "XboxOne"
+        "WindowsStandalone64"
     ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

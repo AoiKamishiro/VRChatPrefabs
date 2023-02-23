@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 #endif
 
-namespace Kamishiro.VRChatUDON.GKLog
+namespace online.kamishiro.vrc.udon.gklog
 {
     [UdonBehaviourSyncMode(BehaviourSyncMode.Manual)]
     [DefaultExecutionOrder(-1)]
@@ -28,44 +28,78 @@ namespace Kamishiro.VRChatUDON.GKLog
         [UdonSynced(UdonSyncMode.None)] private string _logStrings = "\"0[Start] GKLog V2.2 by AoiKamishiro\"";//\"1 2100/12/31 11:59:59 AoiKamishiro\",//UTC
         //[UdonSynced(UdonSyncMode.None)] private bool isSending = false;
         //[UdonSynced(UdonSyncMode.None)] private int dataIndex = 0;
-        public ScrollRect scrollRect;
         public string timeFormat = "[MM/dd HH:mm]";
         public string joinFormat = "[<color=#00ff00>Join</color>]{time} {player}";
         public string leftFormat = "[<color=#ff0000>Left</color>]{time} {player}";
-        private VRCPlayerApi _lp;
-        public LogObject[] _logObjects;
         public string[] joinFormats;
         public string[] leftFormats;
         public readonly string patternTime = "{time}";
         public readonly string patternPlayer = "{player}";
-        [VRC.Udon.Serialization.OdinSerializer.OdinSerialize] /* UdonSharp auto-upgrade: serialization */ public TimeSpan timeSpan;
         private bool isSyncStandby = true;
+
+
+        public ScrollRect _scrollRect;
+        private ScrollRect ScrollRect
+        {
+            get
+            {
+                if (!_scrollRect) _scrollRect = GetComponentInChildren<ScrollRect>();
+                return _scrollRect;
+            }
+        }
+        private TimeSpan _timeSpan = TimeSpan.Zero;
+        internal TimeSpan TimeSpan
+        {
+            get
+            {
+                if (_timeSpan == TimeSpan.Zero) _timeSpan = DateTime.Now - DateTime.UtcNow;
+                return _timeSpan;
+            }
+        }
+        private VRCPlayerApi _localPlayer;
+        internal VRCPlayerApi LocalPlayer
+        {
+            get
+            {
+                if (!Utilities.IsValid(_localPlayer)) _localPlayer = Networking.LocalPlayer;
+                return _localPlayer;
+
+            }
+        }
+
+        private LogObject[] _logObjects;
+        internal LogObject[] LogObjects
+        {
+            get
+            {
+                if (_logObjects == null) _logObjects = GetComponentsInChildren<LogObject>();
+                return _logObjects;
+            }
+        }
 
         private void Start()
         {
-            _lp = Networking.LocalPlayer;
-            timeSpan = DateTime.Now - DateTime.UtcNow;
-            foreach (LogObject logObject in _logObjects) if (logObject != null) logObject.Init();
+            foreach (LogObject logObject in LogObjects) if (logObject != null) logObject.Init(this);
         }
         public override void OnPlayerJoined(VRCPlayerApi player)
         {
-            if (_lp == player) SendCustomNetworkEvent(NetworkEventTarget.Owner, nameof(RequestSyncVariable));
+            if (LocalPlayer == player) SendCustomNetworkEvent(NetworkEventTarget.Owner, nameof(RequestSyncVariable));
 
-            if (!Networking.IsOwner(_lp, gameObject)) return;
+            if (!Networking.IsOwner(LocalPlayer, gameObject)) return;
 
             string currentLog = GetJoinLog(player.displayName);
             string[] logs = Add(PerseLog(_logStrings), currentLog);
-            logs = Clamp(logs, _logObjects.Length);
+            logs = Clamp(logs, LogObjects.Length);
             DispLog(logs);
             _logStrings = CreateLogStrings(logs);
         }
         public override void OnPlayerLeft(VRCPlayerApi player)
         {
-            if (!Networking.IsOwner(_lp, gameObject)) return;
+            if (!Networking.IsOwner(LocalPlayer, gameObject)) return;
 
             string currentLog = GetLeftLog(player.displayName);
             string[] logs = Add(PerseLog(_logStrings), currentLog);
-            logs = Clamp(logs, _logObjects.Length);
+            logs = Clamp(logs, LogObjects.Length);
             DispLog(logs);
             _logStrings = CreateLogStrings(logs);
             RequestSyncVariable();
@@ -76,23 +110,24 @@ namespace Kamishiro.VRChatUDON.GKLog
         }
         private void DispLog(string[] logs)
         {
-            for (int i = 0; i < _logObjects.Length; i++)
+            for (int i = 0; i < LogObjects.Length; i++)
             {
+                if (!LogObjects[i]) continue;
                 if (i >= logs.Length)
                 {
-                    _logObjects[i].Reset();
+                    LogObjects[i].Reset();
                     continue;
                 }
                 if (logs[i] == null)
                 {
-                    _logObjects[i].Reset();
+                    LogObjects[i].Reset();
                     continue;
                 }
 
-                _logObjects[i].SetText(logs[i]);
-                _logObjects[i].transform.SetAsFirstSibling();
+                LogObjects[i].SetText(logs[i]);
+                LogObjects[i].transform.SetAsFirstSibling();
             }
-            scrollRect.CalculateLayoutInputVertical();
+            ScrollRect.CalculateLayoutInputVertical();
         }
         private string CreateLogStrings(string[] vs)
         {
@@ -283,13 +318,11 @@ namespace Kamishiro.VRChatUDON.GKLog
     {
         private enum Language { English, Japanese }
 
-    #region LogSetting
+        #region LogSetting
         private SerializedProperty _timeFormat;
-        private SerializedProperty _scrollView;
         private SerializedProperty _joinFormat;
         private SerializedProperty _leftFormat;
-        private SerializedProperty _logObjects;
-    #endregion
+        #endregion
 
         private string _playerName = "Player Name";
         private PlayerLogSystem _playerLog;
@@ -307,7 +340,7 @@ namespace Kamishiro.VRChatUDON.GKLog
         private const string guidTwitterIcon = "6e15d2cffc23d6e469f30daec548de5e";
         private const string urlTwitter = "https://twitter.com/aoi3192";
         private const string urlDiscord = "https://discord.gg/8muNKrzaSK";
-        private const string urlGitHub = "https://github.com/AoiKamishiro/VRC_UdonPrefabs";
+        private const string urlGitHub = "https://github.com/AoiKamishiro/VRChatPrefabs";
         private Texture[] textures;
         private string[] guids;
         private string[] urls;
@@ -316,9 +349,7 @@ namespace Kamishiro.VRChatUDON.GKLog
         private void OnEnable()
         {
             _style.richText = true;
-            _logObjects = serializedObject.FindProperty(nameof(PlayerLogSystem._logObjects));
             _timeFormat = serializedObject.FindProperty(nameof(PlayerLogSystem.timeFormat));
-            _scrollView = serializedObject.FindProperty(nameof(PlayerLogSystem.scrollRect));
             _joinFormat = serializedObject.FindProperty(nameof(PlayerLogSystem.joinFormat));
             _leftFormat = serializedObject.FindProperty(nameof(PlayerLogSystem.leftFormat));
             headerTexture = AssetDatabase.LoadAssetAtPath(AssetDatabase.GUIDToAssetPath(guidHeader), typeof(Texture)) as Texture;
@@ -448,14 +479,6 @@ namespace Kamishiro.VRChatUDON.GKLog
             UdonSharpGUI.DrawSyncSettings(target);
             UdonSharpGUI.DrawUtilities(target);
             UdonSharpGUI.DrawUILine();
-            EditorGUI.indentLevel--;
-
-            EditorGUILayout.Space();
-
-            EditorGUILayout.LabelField("Object Reference", EditorStyles.boldLabel);
-            EditorGUI.indentLevel++;
-            EditorGUILayout.PropertyField(_scrollView);
-            EditorGUILayout.PropertyField(_logObjects);
             EditorGUI.indentLevel--;
 
             EditorGUILayout.Space();

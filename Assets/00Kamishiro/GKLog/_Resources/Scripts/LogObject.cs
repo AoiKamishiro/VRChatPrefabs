@@ -11,12 +11,11 @@ using UdonSharp;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Kamishiro.VRChatUDON.GKLog
+namespace online.kamishiro.vrc.udon.gklog
 {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class LogObject : UdonSharpBehaviour
     {
-        public PlayerLogSystem playerLogSystem;
         public Text _unityText;
         public TextMeshProUGUI _tmText;
         public GameObject _textGameObject;
@@ -28,12 +27,12 @@ namespace Kamishiro.VRChatUDON.GKLog
         private string patternPlayer;
         private string patternTime;
 
-        public void Init()
+        public void Init(PlayerLogSystem playerLogSystem)
         {
             joinFormat = playerLogSystem.joinFormats;
             leftFormat = playerLogSystem.leftFormats;
             timeFormat = playerLogSystem.timeFormat;
-            timeSpan = playerLogSystem.timeSpan;
+            timeSpan = playerLogSystem.TimeSpan;
             patternPlayer = playerLogSystem.patternPlayer;
             patternTime = playerLogSystem.patternTime;
         }

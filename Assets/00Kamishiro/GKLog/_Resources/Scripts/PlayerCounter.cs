@@ -10,7 +10,7 @@ using UdonSharp;
 using UnityEngine.UI;
 using VRC.SDKBase;
 
-namespace Kamishiro.VRChatUDON.GKLog
+namespace online.kamishiro.vrc.udon.gklog
 {
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class PlayerCounter : UdonSharpBehaviour
