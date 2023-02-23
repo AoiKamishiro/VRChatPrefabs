@@ -1,7 +1,7 @@
 # Auto Adjustment Chair -AAChair- for VRCSDK3 UDON
 ![HeaderImage](_Resources/Images/ShopImage.png)
 
-version 2.0.0
+version 2.1.0
 [Japanese Readme][00]  
 
 CreatedBy：AoiKamishiro([@aoi3192][01])  
@@ -23,13 +23,12 @@ Please download the latest version from the [Release][21] page.
 * The assets in the UnityPackage are distributed under the [MIT License][61].  
 
 ### Contact  
-[Ind.Kamishiro Discrod Server][81]  
+[Ind.Kamishiro Discord Server][81]  
 [Twitter: @aoi3192][82]  
 [VRChat: 神城アオイ][83]  
   
 ## 関連サイト  
 [Booth][91]  
-[Vket][92]  
 [Github][93]  
 
 [00]:AAChair-README_JP.md
@@ -41,5 +40,4 @@ Please download the latest version from the [Release][21] page.
 [82]:https://twitter.com/aoi3192
 [83]:https://www.vrchat.com/home/user/usr_19514816-2cf8-43cc-a046-9e2d87d15af7
 [91]:https://kamishirolab.booth.pm/
-[92]:https://www.v-market.work/ec/shops/1810/detail/
 [93]:https://github.com/AoiKamishiro

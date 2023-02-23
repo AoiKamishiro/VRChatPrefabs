@@ -119,9 +119,6 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 5666524859565052895}
-  anim: {fileID: 6343574909267568577}
-  adjuster: {fileID: -6151247857525818955}
-  station: {fileID: 4341479178535107629}
   adjustPint: {fileID: 2453928581798242653}
   enterPoint: {fileID: 337036467961443988}
 --- !u!114 &5666524859565052895
@@ -246,7 +243,6 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 5892662284259758043}
-  aAChair: {fileID: -1007090086154982712}
 --- !u!114 &5892662284259758043
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -348,7 +344,6 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   _udonSharpBackingUdonBehaviour: {fileID: 8798270531327160743}
-  aAChair: {fileID: -1007090086154982712}
 --- !u!114 &8798270531327160743
 MonoBehaviour:
   m_ObjectHideFlags: 0

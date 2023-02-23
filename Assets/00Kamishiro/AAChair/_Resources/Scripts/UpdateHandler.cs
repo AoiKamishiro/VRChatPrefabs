@@ -1,18 +1,20 @@
-﻿
-using UdonSharp;
+﻿using UdonSharp;
 using UnityEngine;
-using VRC.SDKBase;
-using VRC.Udon;
 
-namespace Kamishiro.VRChatUDON.AAChair
+namespace online.kamishiro.vrc.udon.aachair
 {
-    [UdonBehaviourSyncMode(BehaviourSyncMode.NoVariableSync)]
+    [DefaultExecutionOrder(0), UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class UpdateHandler : UdonSharpBehaviour
     {
-        public AutoAdjustStation aAChair;
-        private void LateUpdate()
+        private AutoAdjustStation _autoAdjustStation;
+        private AutoAdjustStation AutoAdjustStation
         {
-            aAChair._AAChair_AdjustPosition();
+            get
+            {
+                if (!_autoAdjustStation) _autoAdjustStation = GetComponentInParent<AutoAdjustStation>();
+                return _autoAdjustStation;
+            }
         }
+        private void LateUpdate() => AutoAdjustStation._AAChair_AdjustPosition();
     }
 }

@@ -1,5 +1,4 @@
-﻿
-using UdonSharp;
+﻿using UdonSharp;
 using UnityEngine;
 using VRC.SDKBase;
 
@@ -8,19 +7,14 @@ using UnityEditor;
 using UdonSharpEditor;
 #endif
 
-namespace Kamishiro.VRChatUDON.AAChair
+namespace online.kamishiro.vrc.udon.aachair
 {
-    [UdonBehaviourSyncMode(BehaviourSyncMode.NoVariableSync)]
+    [DefaultExecutionOrder(0), UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class AutoAdjustStation : UdonSharpBehaviour
     {
-        private VRCPlayerApi _tp;
-        private VRCPlayerApi _lp;
         private const float _zError = 0.05f;//ふくらはぎ！！
         private const float _yError = 0.05f;//ふともも！！
         private const float _maxValue = 2.0f;
-        public Animator anim;
-        public UpdateHandler adjuster;
-        public StationHandler station;
         public Transform adjustPint;
         public Transform enterPoint;
         private float avatarHeight = 0.0f;
@@ -28,42 +22,82 @@ namespace Kamishiro.VRChatUDON.AAChair
         private const string animParam_stop = "stop";
         private const string animParam_recaluc = "recaluc";
 
-        private void OnEnable()
+        private VRCPlayerApi _targetPlayer;
+        private VRCPlayerApi TargetPlayer
         {
-            _lp = Networking.LocalPlayer;
+            get => _targetPlayer;
+            set => _targetPlayer = value;
         }
-        public void OnInteract()
+
+        private VRCPlayerApi _localPlayer;
+        private VRCPlayerApi LocalPlayer
         {
-            station._AAChair_UseAttachedStation(_lp);
+            get
+            {
+                if (!Utilities.IsValid(_localPlayer)) _localPlayer = Networking.LocalPlayer;
+                return _localPlayer;
+            }
         }
+
+        private UpdateHandler _updateHandler;
+        private UpdateHandler UpdateHandler
+        {
+            get
+            {
+                if (!_updateHandler) _updateHandler = GetComponentInChildren<UpdateHandler>();
+                return _updateHandler;
+            }
+        }
+
+        private StationHandler _stationHandler;
+        private StationHandler StationHandler
+        {
+            get
+            {
+                if (!_stationHandler) _stationHandler = GetComponentInChildren<StationHandler>();
+                return _stationHandler;
+            }
+        }
+
+        private Animator _adjusterAnimator;
+        private Animator AdjusterAnimator
+        {
+            get
+            {
+                if (!_adjusterAnimator) _adjusterAnimator = UpdateHandler.GetComponent<Animator>();
+                return _adjusterAnimator;
+            }
+        }
+
+        public void OnInteract() => StationHandler._AAChair_UseAttachedStation(LocalPlayer);
         public void _AAChair_ReCalulateAvatarHeight()
         {
-            if (_tp == null) return;
+            if (TargetPlayer == null) return;
 
-            float newHeight = GetAvatarHeight(_tp);
+            float newHeight = GetAvatarHeight(TargetPlayer);
             if (Mathf.Abs(newHeight - avatarHeight) >= 0.2)
             {
                 avatarHeight = newHeight;
-                anim.SetTrigger(animParam_adjust);
+                AdjusterAnimator.SetTrigger(animParam_adjust);
             }
-            anim.SetTrigger(animParam_recaluc);
+            AdjusterAnimator.SetTrigger(animParam_recaluc);
         }
         public void _AAChair_OnStationEntered(VRCPlayerApi player)
         {
-            _tp = player;
+            TargetPlayer = player;
             avatarHeight = GetAvatarHeight(player);
-            anim.ResetTrigger(animParam_stop);
-            anim.SetTrigger(animParam_adjust);
-            anim.SetTrigger(animParam_recaluc);
+            AdjusterAnimator.ResetTrigger(animParam_stop);
+            AdjusterAnimator.SetTrigger(animParam_adjust);
+            AdjusterAnimator.SetTrigger(animParam_recaluc);
         }
         public void _AAChair_OnStationExited(VRCPlayerApi player)
         {
-            _tp = null;
-            anim.SetTrigger(animParam_stop);
+            TargetPlayer = null;
+            AdjusterAnimator.SetTrigger(animParam_stop);
         }
         public void _AAChair_AdjustPosition()
         {
-            enterPoint.localPosition = GetAdjustedPosition(_tp);
+            enterPoint.localPosition = GetAdjustedPosition(TargetPlayer);
             enterPoint.localRotation = Quaternion.identity;
         }
         private Vector3 GetAdjustedPosition(VRCPlayerApi player)
@@ -112,10 +146,7 @@ namespace Kamishiro.VRChatUDON.AAChair
     [CustomEditor(typeof(AutoAdjustStation))]
     public class AutoAdjustStationEditor : Editor
     {
-        private SerializedProperty _anim;
         private AutoAdjustStation _aaStation;
-        private SerializedProperty _adjuster;
-        private SerializedProperty _station;
         private SerializedProperty _enterPoint;
         private SerializedProperty _referencePoint;
         private Texture headerTexture;
@@ -128,7 +159,7 @@ namespace Kamishiro.VRChatUDON.AAChair
         private const string guidTwitterIcon = "1d5ff85f48ee02f4eb7690b9e231d567";
         private const string urlTwitter = "https://twitter.com/aoi3192";
         private const string urlDiscord = "https://discord.gg/8muNKrzaSK";
-        private const string urlGitHub = "https://github.com/AoiKamishiro/VRC_UdonPrefabs";
+        private const string urlGitHub = "https://github.com/AoiKamishiro/VRChatPrefabs";
         private Texture[] textures;
         private string[] guids;
         private string[] urls;
@@ -138,9 +169,6 @@ namespace Kamishiro.VRChatUDON.AAChair
 
         private void OnEnable()
         {
-            _anim = serializedObject.FindProperty(nameof(AutoAdjustStation.anim));
-            _adjuster = serializedObject.FindProperty(nameof(AutoAdjustStation.adjuster));
-            _station = serializedObject.FindProperty(nameof(AutoAdjustStation.station));
             _enterPoint = serializedObject.FindProperty(nameof(AutoAdjustStation.enterPoint));
             _referencePoint = serializedObject.FindProperty(nameof(AutoAdjustStation.adjustPint));
             headerTexture = AssetDatabase.LoadAssetAtPath(AssetDatabase.GUIDToAssetPath(guidHeader), typeof(Texture)) as Texture;
@@ -213,8 +241,7 @@ namespace Kamishiro.VRChatUDON.AAChair
         {
             EditorGUILayout.LabelField("Udon Setting", EditorStyles.boldLabel);
             EditorGUI.indentLevel++;
-            if (UdonSharpGUI.DrawConvertToUdonBehaviourButton(target) || UdonSharpGUI.DrawProgramSource(target))
-                return;
+            if (UdonSharpGUI.DrawProgramSource(target)) return;
             UdonSharpGUI.DrawSyncSettings(target);
             UdonSharpGUI.DrawUtilities(target);
             UdonSharpGUI.DrawUILine();
@@ -239,15 +266,14 @@ namespace Kamishiro.VRChatUDON.AAChair
             EditorGUILayout.Space();
 
             EditorGUI.indentLevel++;
+            EditorGUI.BeginDisabledGroup(true);
             internal_fold = EditorGUILayout.Foldout(internal_fold, "Object Reference");
             if (internal_fold)
             {
-                EditorGUILayout.PropertyField(_anim, true);
-                EditorGUILayout.PropertyField(_adjuster, true);
-                EditorGUILayout.PropertyField(_station, true);
                 EditorGUILayout.PropertyField(_enterPoint, true);
                 EditorGUILayout.PropertyField(_referencePoint, true);
             }
+            EditorGUI.EndDisabledGroup();
             EditorGUI.indentLevel--;
 
 

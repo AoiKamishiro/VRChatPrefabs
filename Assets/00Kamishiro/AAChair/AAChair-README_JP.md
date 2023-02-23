@@ -1,7 +1,7 @@
 # VRCSDK3 Udon用 自動調節椅子 AAChair
 ![HeaderImage](_Resources/Images/ShopImage.png)
 
-version 2.0.0 
+version 2.1.0 
 [English Readme][00]  
 
 制作：神城アオイ([@aoi3192][01])  
@@ -14,7 +14,7 @@ version 2.0.0
 [リリース][21]ページより最新版のダウンロードをお願いします。  
 
 ## 導入方法  
-1. 事前に、VRCSDK3 と UdonSharp の最新版のインポートをしてください。  
+1. 事前に、VRCSDK3 と UdonSharp の最新版をVCCより導入してください。  
 2. 00Kamishiro/AAChair/AAchair.prefab をシーン内に設置してください。  
 3. 必要に応じて椅子のモデルの差し替えを行ってください。  
 4. 着席した時に膝の裏側が来てほしい位置に、プレハブ内の AdjustPoint を移動させてください。  
@@ -29,7 +29,6 @@ version 2.0.0
   
 ## 関連サイト  
 [Booth: 神城工業][91]  
-[Vket: 神城工業][92]  
 [Github: 神城アオイ][93]  
 
 [00]:AAChair-README_EN.md
@@ -41,5 +40,4 @@ version 2.0.0
 [82]:https://twitter.com/aoi3192
 [83]:https://www.vrchat.com/home/user/usr_19514816-2cf8-43cc-a046-9e2d87d15af7
 [91]:https://kamishirolab.booth.pm/
-[92]:https://www.v-market.work/ec/shops/1810/detail/
 [93]:https://github.com/AoiKamishiro

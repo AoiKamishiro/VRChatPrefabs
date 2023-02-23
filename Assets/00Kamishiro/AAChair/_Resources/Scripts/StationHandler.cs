@@ -1,29 +1,25 @@
-﻿
-using UdonSharp;
+﻿using UdonSharp;
+using UnityEngine;
 using VRC.SDKBase;
 
-namespace Kamishiro.VRChatUDON.AAChair
+namespace online.kamishiro.vrc.udon.aachair
 {
-    [UdonBehaviourSyncMode(BehaviourSyncMode.NoVariableSync)]
+    [DefaultExecutionOrder(0), UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public class StationHandler : UdonSharpBehaviour
     {
-        public AutoAdjustStation aAChair;
+        private AutoAdjustStation _autoAdjustStation;
+        private AutoAdjustStation AutoAdjustStation
+        {
+            get
+            {
+                if (!_autoAdjustStation) _autoAdjustStation = GetComponentInParent<AutoAdjustStation>();
+                return _autoAdjustStation;
+            }
+        }
 
-        public override void Interact()
-        {
-            aAChair.OnInteract();
-        }
-        public void _AAChair_UseAttachedStation(VRCPlayerApi player)
-        {
-            player.UseAttachedStation();
-        }
-        public override void OnStationEntered(VRCPlayerApi player)
-        {
-            aAChair._AAChair_OnStationEntered(player);
-        }
-        public override void OnStationExited(VRCPlayerApi player)
-        {
-            aAChair._AAChair_OnStationExited(player);
-        }
+        public override void Interact() => AutoAdjustStation.OnInteract();
+        public void _AAChair_UseAttachedStation(VRCPlayerApi player) => player.UseAttachedStation();
+        public override void OnStationEntered(VRCPlayerApi player) => AutoAdjustStation._AAChair_OnStationEntered(player);
+        public override void OnStationExited(VRCPlayerApi player) => AutoAdjustStation._AAChair_OnStationExited(player);
     }
 }
