@@ -122,6 +122,10 @@ namespace Kamishiro.VRChatUDON.AKSwitch
 
         private void Start()
         {
+            SendCustomEventDelayedFrames(nameof(LateStart), 1);
+        }
+        public void LateStart()
+        {
             materialPropertyBlock = new MaterialPropertyBlock();
             _lp = Networking.LocalPlayer;
             isMain = mainAKSwitch == this;
