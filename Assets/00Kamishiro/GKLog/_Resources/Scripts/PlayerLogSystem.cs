@@ -25,7 +25,7 @@ namespace online.kamishiro.vrc.udon.gklog
     [DefaultExecutionOrder(-1)]
     public class PlayerLogSystem : UdonSharpBehaviour
     {
-        [UdonSynced(UdonSyncMode.None)] private string _logStrings = "\"0[Start] GKLog V3.1.2 by AoiKamishiro\"";//\"1 2100/12/31 11:59:59 AoiKamishiro\",//UTC
+        [UdonSynced(UdonSyncMode.None)] private string _logStrings = "\"0[Start] GKLog V3.1.3 by AoiKamishiro\"";//\"1 2100/12/31 11:59:59 AoiKamishiro\",//UTC
         //[UdonSynced(UdonSyncMode.None)] private bool isSending = false;
         //[UdonSynced(UdonSyncMode.None)] private int dataIndex = 0;
         public string timeFormat = "[MM/dd HH:mm]";
@@ -79,7 +79,13 @@ namespace online.kamishiro.vrc.udon.gklog
 
         private void Start()
         {
-            foreach (LogObject logObject in LogObjects) if (logObject != null) logObject.Init(this);
+            foreach (LogObject logObject in LogObjects) if (logObject) { logObject.Init(this); }
+            SendCustomEventDelayedSeconds(nameof(ReInit), 5.0f);
+        }
+        public void ReInit()
+        {
+            _timeSpan = DateTime.Now - DateTime.UtcNow;
+            foreach (LogObject logObject in LogObjects) if (logObject) { logObject.TimeSpan = _timeSpan; }
         }
         public override void OnPlayerJoined(VRCPlayerApi player)
         {
@@ -124,7 +130,7 @@ namespace online.kamishiro.vrc.udon.gklog
                     continue;
                 }
 
-                LogObjects[i].SetText(logs[i]);
+                LogObjects[i].Text = logs[i];
                 LogObjects[i].transform.SetAsFirstSibling();
             }
             ScrollRect.CalculateLayoutInputVertical();

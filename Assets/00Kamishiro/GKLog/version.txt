@@ -1,1 +1,1 @@
-GKLog v3.1.2
+GKLog v3.1.3

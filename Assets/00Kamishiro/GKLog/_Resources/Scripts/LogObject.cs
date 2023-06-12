@@ -23,45 +23,64 @@ namespace online.kamishiro.vrc.udon.gklog
         private string[] joinFormat;
         private string[] leftFormat;
         private string timeFormat;
-        private TimeSpan timeSpan;
+        private TimeSpan _timeSpan;
         private string patternPlayer;
         private string patternTime;
+        private string _content;
+        internal string Text
+        {
+            set
+            {
+                _content = value;
+                Apply();
+            }
+        }
+        internal TimeSpan TimeSpan
+        {
+            set
+            {
+                _timeSpan = value;
+                Apply();
+            }
+        }
 
         public void Init(PlayerLogSystem playerLogSystem)
         {
             joinFormat = playerLogSystem.joinFormats;
             leftFormat = playerLogSystem.leftFormats;
             timeFormat = playerLogSystem.timeFormat;
-            timeSpan = playerLogSystem.TimeSpan;
+            _timeSpan = playerLogSystem.TimeSpan;
             patternPlayer = playerLogSystem.patternPlayer;
             patternTime = playerLogSystem.patternTime;
         }
-        public void SetText(string content)
+
+        private void Apply()
         {
+            Debug.Log("Apply");
             string logText;
             bool activate;
 
-            if (content.Length < 1)
+            if (_content.Length < 1)
             {
                 logText = "";
                 activate = false;
             }
-            else if (content.StartsWith("1") || content.StartsWith("2"))
+            else if (_content.StartsWith("1") || _content.StartsWith("2"))
             {
                 logText = "";
-                string time = (DateTime.Parse(content.Substring(1, 19)) + timeSpan).ToString(timeFormat);
-                string[] format = content.StartsWith("1") ? joinFormat : leftFormat;
+                string time = (DateTime.Parse(_content.Substring(1, 19)) + _timeSpan).ToString(timeFormat);
+                string[] format = _content.StartsWith("1") ? joinFormat : leftFormat;
                 foreach (string tex in format)
                 {
                     if (tex == patternTime) logText += time;
-                    else if (tex == patternPlayer) logText += content.Substring(20);
+                    else if (tex == patternPlayer) logText += _content.Substring(20);
                     else logText += tex;
                 }
                 activate = true;
             }
             else
             {
-                logText = content.Substring(1);
+                logText = _content.Substring(1);
                 activate = true;
             }
 
@@ -72,7 +91,7 @@ namespace online.kamishiro.vrc.udon.gklog
         }
         public void Reset()
         {
-            SetText("");
+            Text = string.Empty;
         }
     }
 }
