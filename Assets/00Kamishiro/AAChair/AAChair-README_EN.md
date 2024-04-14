@@ -1,4 +1,5 @@
 # Auto Adjustment Chair -AAChair- for VRCSDK3 UDON
+
 ![HeaderImage](_Resources/Images/ShopImage.png)
 
 version 2.1.0
@@ -7,27 +8,33 @@ version 2.1.0
 CreatedBy：AoiKamishiro([@aoi3192][01])  
 
 ## About
+
 A chair that automatically adjusts the seating position. Since it is calculated based on the avatar's bone information, it will adjust regardless of the animation specifications.  
 [Booth Page][71]  
 
 ## Download
+
 Please download the latest version from the [Release][21] page.  
 
 ## Install  
+
 1. Import the latest versions of VRCSDK3 and UdonSharp before you start.  
 2. Place 00Kamishiro/AAChair/AAchair.prefab in the scene.  
 3. If necessary, replace the chair model.  
 4. Move the AdjustPoint in the prefab to the position where you want the back of the knee to be when seated.  
 
 ## Terms of Use  
+
 * The assets in the UnityPackage are distributed under the [MIT License][61].  
 
 ### Contact  
+
 [Ind.Kamishiro Discord Server][81]  
 [Twitter: @aoi3192][82]  
 [VRChat: 神城アオイ][83]  
   
 ## 関連サイト  
+
 [Booth][91]  
 [Github][93]  
 

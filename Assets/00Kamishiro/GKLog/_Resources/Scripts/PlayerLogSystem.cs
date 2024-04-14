@@ -25,7 +25,7 @@ namespace online.kamishiro.vrc.udon.gklog
     [DefaultExecutionOrder(-1)]
     public class PlayerLogSystem : UdonSharpBehaviour
     {
-        [UdonSynced(UdonSyncMode.None)] private string _logStrings = "\"0[Start] GKLog V3.1.3 by AoiKamishiro\"";//\"1 2100/12/31 11:59:59 AoiKamishiro\",//UTC
+        [UdonSynced(UdonSyncMode.None)] private string _logStrings = "\"0[Start] GKLog V3.1.4 by AoiKamishiro\"";//\"1 2100/12/31 11:59:59 AoiKamishiro\",//UTC
         //[UdonSynced(UdonSyncMode.None)] private bool isSending = false;
         //[UdonSynced(UdonSyncMode.None)] private int dataIndex = 0;
         public string timeFormat = "[MM/dd HH:mm]";

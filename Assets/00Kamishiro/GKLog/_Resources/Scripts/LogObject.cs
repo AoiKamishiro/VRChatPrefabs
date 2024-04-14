@@ -27,7 +27,7 @@ namespace online.kamishiro.vrc.udon.gklog
         private string patternPlayer;
         private string patternTime;
         private string _content;
-        internal string Text
+        public string Text
         {
             set
             {
@@ -35,7 +35,7 @@ namespace online.kamishiro.vrc.udon.gklog
                 Apply();
             }
         }
-        internal TimeSpan TimeSpan
+        public TimeSpan TimeSpan
         {
             set
             {
@@ -56,7 +56,6 @@ namespace online.kamishiro.vrc.udon.gklog
 
         private void Apply()
         {
-            Debug.Log("Apply");
             string logText;
             bool activate;
 

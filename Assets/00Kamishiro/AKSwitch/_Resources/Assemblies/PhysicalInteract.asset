@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c333ccfdd0cbdbc4ca30cef2dd6e6b9b, type: 3}
   m_Name: PhysicalInteract
   m_EditorClassIdentifier: 
-  serializedUdonProgramAsset: {fileID: 11400000, guid: 66c6dd1ace1ab834e83b8c63999b4225,
+  serializedUdonProgramAsset: {fileID: 11400000, guid: 301a126480239e348a113a48323a1751,
     type: 2}
   udonAssembly: 
   assemblyError: 

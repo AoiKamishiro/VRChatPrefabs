@@ -22,19 +22,15 @@ namespace online.kamishiro.vrc.udon.gklog
 
         public override void OnPlayerJoined(VRCPlayerApi player)
         {
-            SendCustomEventDelayedFrames(nameof(CountPlayer), 1);
-            //CountPlayer();
+            SendCustomEventDelayedFrames(nameof(CountPlayer), 10);
         }
         public override void OnPlayerLeft(VRCPlayerApi player)
         {
-            SendCustomEventDelayedFrames(nameof(CountPlayer), 1);
-            //CountPlayer();
+            SendCustomEventDelayedFrames(nameof(CountPlayer), 10);
         }
         public void CountPlayer()
         {
-            int playerCount = 0;
-            playerApis = VRCPlayerApi.GetPlayers(playerApis);
-            foreach (VRCPlayerApi playerApi in playerApis) if (Utilities.IsValid(playerApi)) playerCount++;
+            int playerCount = VRCPlayerApi.GetPlayerCount();
 
             if (_uiText != null) _uiText.text = playerCount.ToString().PadLeft(2, '0') + suffix;
             if (_tmText != null) _tmText.text = playerCount.ToString().PadLeft(2, '0') + suffix;

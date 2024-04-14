@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c333ccfdd0cbdbc4ca30cef2dd6e6b9b, type: 3}
   m_Name: AKSwitch
   m_EditorClassIdentifier: 
-  serializedUdonProgramAsset: {fileID: 11400000, guid: cb3493bcae922914b9431a0046435373,
+  serializedUdonProgramAsset: {fileID: 11400000, guid: 91ab4ed3896bc7a45a9abd790a78cd14,
     type: 2}
   udonAssembly: 
   assemblyError: 

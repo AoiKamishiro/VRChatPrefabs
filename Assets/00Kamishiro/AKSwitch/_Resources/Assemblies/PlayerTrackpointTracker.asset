@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c333ccfdd0cbdbc4ca30cef2dd6e6b9b, type: 3}
   m_Name: PlayerTrackpointTracker
   m_EditorClassIdentifier: 
-  serializedUdonProgramAsset: {fileID: 11400000, guid: 4f2f5d1124252bf4499ef1e4ca3cf191,
+  serializedUdonProgramAsset: {fileID: 11400000, guid: 2967fee45f3b42e429708af6417220b0,
     type: 2}
   udonAssembly: 
   assemblyError: 
