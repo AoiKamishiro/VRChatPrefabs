@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5136146375e9a0a498a72a0091b40cc1, type: 3}
-  m_Name: Kamishiro.VRChatUDON.AKSwitch.SampleScene
+  m_Name: online.kamishiro.vrc.udon.akswitch.sample
   m_EditorClassIdentifier: 
   sourceAssembly: {fileID: 5897886265953266890, guid: a65b4db5ef937f045b80ba95e36ad1c7,
     type: 3}
