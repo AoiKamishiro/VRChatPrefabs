@@ -1022,7 +1022,7 @@ MonoBehaviour:
       Data: 49|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: Kamishiro.VRChatUDON.AKSwitch.PhysicalInteract, Kamishiro.VRChatUDON.AKSwitch
+      Data: Kamishiro.VRChatUDON.AKSwitch.PhysicalInteract, online.kamishiro.vrc.udon.akswitch
     - Name: 
       Entry: 8
       Data: 
@@ -1082,7 +1082,7 @@ MonoBehaviour:
       Data: 53|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: Kamishiro.VRChatUDON.AKSwitch.RaycastInteract, Kamishiro.VRChatUDON.AKSwitch
+      Data: Kamishiro.VRChatUDON.AKSwitch.RaycastInteract, online.kamishiro.vrc.udon.akswitch
     - Name: 
       Entry: 8
       Data: 
@@ -1580,7 +1580,7 @@ MonoBehaviour:
       Data: 76|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: Kamishiro.VRChatUDON.AKSwitch.AKSwitch, Kamishiro.VRChatUDON.AKSwitch
+      Data: Kamishiro.VRChatUDON.AKSwitch.AKSwitch, online.kamishiro.vrc.udon.akswitch
     - Name: 
       Entry: 8
       Data: 
@@ -1634,7 +1634,7 @@ MonoBehaviour:
       Data: 79|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: Kamishiro.VRChatUDON.AKSwitch.PlayerBoneTracker[], Kamishiro.VRChatUDON.AKSwitch
+      Data: Kamishiro.VRChatUDON.AKSwitch.PlayerBoneTracker[], online.kamishiro.vrc.udon.akswitch
     - Name: 
       Entry: 8
       Data: 
@@ -1694,7 +1694,7 @@ MonoBehaviour:
       Data: 83|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: Kamishiro.VRChatUDON.AKSwitch.PlayerTrackpointTracker[], Kamishiro.VRChatUDON.AKSwitch
+      Data: Kamishiro.VRChatUDON.AKSwitch.PlayerTrackpointTracker[], online.kamishiro.vrc.udon.akswitch
     - Name: 
       Entry: 8
       Data: 

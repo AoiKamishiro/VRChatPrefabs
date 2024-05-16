@@ -1,6 +1,6 @@
 {
     "name": "online.kamishiro.shadergui.akslideshow",
-    "rootNamespace": "",
+    "rootNamespace": "online.kamishiro.shadergui.akslideshow",
     "references": [],
     "includePlatforms": [
         "Editor"

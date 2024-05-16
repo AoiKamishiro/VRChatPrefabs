@@ -170,7 +170,7 @@ MonoBehaviour:
       Data: 9|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: Kamishiro.VRChatUDON.AKSwitch.AKSwitch, Kamishiro.VRChatUDON.AKSwitch
+      Data: Kamishiro.VRChatUDON.AKSwitch.AKSwitch, online.kamishiro.vrc.udon.akswitch
     - Name: 
       Entry: 8
       Data: 
